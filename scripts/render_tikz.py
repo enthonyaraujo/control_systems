@@ -18,6 +18,7 @@ NS = '{http://www.w3.org/2000/svg}'
 PREAMBLE = r'''\documentclass[border=5pt]{standalone}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
 \usepackage{pgfplots}

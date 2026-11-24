@@ -27,7 +27,7 @@ jobs:
       - name: Instalar LaTeX e Poppler
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-pictures texlive-fonts-recommended poppler-utils
+          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-pictures texlive-fonts-recommended lmodern poppler-utils
       - name: Gerar Markdown e SVGs
         run: python3 scripts/render_tikz.py --jobs 2
       - name: Publicar alterações geradas
