@@ -1,0 +1,9 @@
+/* Centraliza os SVGs gerados pelo TikZJax no Obsidian.
+   Ative em Configurações > Aparência > Trechos de CSS. */
+.block-language-tikz svg {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 100%;
+  height: auto;
+}

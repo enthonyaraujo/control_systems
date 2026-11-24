@@ -1,0 +1,928 @@
+# Unidade 3 — Representação por Variáveis de Estado
+
+## Representação por variáveis de estado
+
+**Definição:** o estado $x(t_0)$ de um sistema no instante $t_0$ é a informação em $t_0$ que, junto com a entrada $u(t)$, determina, de forma única, a resposta do sistema para $t>t_0$.
+
+O estado é geralmente representado na forma de um vetor:
+
+$$
+x(t)=\begin{bmatrix}x_1(t)\\x_2(t)\\\vdots\\x_n(t)\end{bmatrix}
+$$
+
+$x_1,x_2,\ldots,x_n$ são as variáveis de estado. A quantidade depende da ordem do sistema.
+
+**Exemplo:** considere um sistema dado por:
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\draw (0,0) -- (6,0) (0,0) -- (0,.9) (0,1.7) -- (0,2.6) -- (1,2.6);
+\draw (0,1.3) circle (.4);
+\node at (0,1.45) {$+$}; \node at (0,1.15) {$-$};
+\node[left] at (-.43,1.3) {$u(t)$};
+\draw (1.000,2.600) -- (1.288,2.600) -- (1.424,2.705) -- (1.560,2.495) -- (1.696,2.705) -- (1.832,2.495) -- (1.968,2.705) -- (2.104,2.495) -- (2.240,2.705) -- (2.376,2.495) -- (2.512,2.600) -- (2.800,2.600);
+\draw (3.000,2.600) -- (3.234,2.600) .. controls (3.274,2.850) and (3.527,2.850) .. (3.567,2.600) .. controls (3.607,2.850) and (3.860,2.850) .. (3.900,2.600) .. controls (3.940,2.850) and (4.193,2.850) .. (4.233,2.600) .. controls (4.273,2.850) and (4.526,2.850) .. (4.566,2.600) -- (4.800,2.600);
+\draw (2.8,2.6) -- (3,2.6) (4.8,2.6) -- (6,2.6) -- (6,2);
+\draw (6,2) -- (6,1.08) (6,0.92) -- (6,0);
+\draw (5.76,1.08) -- (6.24,1.08) (5.76,0.92) -- (6.24,0.92);
+\node[above] at (1.9,2.8) {$ 3\,\Omega $};
+\node[above] at (3.9,2.88) {$ 1\,\mathrm{H} $};
+\node[left] at (5.7,1) {$ \frac12\,\mathrm{F} $};
+\node[right] at (6.35,1) {$ y(t) $};
+\node at (6.32,1.7) {$+$}; \node at (6.32,.3) {$-$};
+\draw[->] (2.05,1.3) arc (145:-145:.7);
+\node at (2.65,1.25) {$ i(t) $};
+\end{tikzpicture}
+\end{document}
+```
+
+**Solução:**
+
+$$
+u(t)=3i(t)+\frac{di(t)}{dt}+y(t)
+$$
+
+$$
+i(t)=i_C(t)\Rightarrow i(t)=C\frac{dy(t)}{dt}=\frac12\frac{dy(t)}{dt}
+$$
+
+$$
+u(t)=3\cdot\frac12\frac{dy(t)}{dt}+\frac12\frac{d^2y(t)}{dt^2}+y(t)
+$$
+
+$$
+\frac{2u(t)}{2}=\frac{3\,dy(t)/dt+d^2y(t)/dt^2+2y(t)}{2}
+$$
+
+$$
+\boxed{\frac{d^2y(t)}{dt^2}+3\frac{dy(t)}{dt}+2y(t)=2u(t)}
+$$
+
+Aplicando Laplace, temos:
+
+$$
+\begin{aligned}
+s^2Y(s)-sy(0)-\dot y(0)+3(sY(s)-y_0)+2Y(s)&=2U(s)\\
+s^2Y(s)-sy(0)-\dot y(0)+3sY(s)-3y_0+2Y(s)&=2U(s)\\
+Y(s)(s^2+3s+2)&=y(0)(s+3)+\dot y_0+2U(s)
+\end{aligned}
+$$
+
+$$
+\underbrace{Y(s)}_{\text{Saída}}=
+\underbrace{\frac{s+3}{s^2+3s+2}y(0)+\frac{1}{s^2+3s+2}\dot y(0)}_{\text{Condições iniciais}}
++\underbrace{\frac{2}{s^2+3s+2}U(s)}_{\text{Entrada}}
+$$
+
+**Obs.:** as variáveis de estado estão relacionadas a elementos “acumuladores de energia” do sistema.
+
+**Equações de estado:** considere a equação diferencial anterior:
+
+$$
+\frac{d^2y(t)}{dt^2}+3\frac{dy(t)}{dt}+2y(t)=u(t)
+$$
+
+Definindo $x_1(t)=y(t)$ e $x_2(t)=\dot y(t)$ como variáveis de estado, temos:
+
+$$
+\begin{aligned}
+\dot x_1(t)&=\dot y(t)=x_2(t)\\
+\dot x_2(t)&=\ddot y(t)
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\ddot y(t)+3\dot y(t)+2y(t)&=2u(t)\\
+\ddot y(t)&=-3\dot y(t)-2y(t)+2u(t)\\
+\ddot y(t)&=-3x_2(t)-2x_1(t)+2u(t)
+\end{aligned}
+$$
+
+Substituindo em $\dot x_2(t)=\ddot y(t)$:
+
+$$
+\dot x_2(t)=-2x_1(t)-3x_2(t)+2u(t)\tag{2}
+$$
+
+$$y(t)=x_1$$
+
+Representando na forma matricial, temos:
+
+$$
+\begin{bmatrix}\dot x_1(t)\\\dot x_2(t)\end{bmatrix}=
+\begin{bmatrix}0&1\\-2&-3\end{bmatrix}
+\begin{bmatrix}x_1(t)\\x_2(t)\end{bmatrix}+
+\begin{bmatrix}0\\2\end{bmatrix}u(t)
+$$
+
+$$
+y(t)=\begin{bmatrix}1&0\end{bmatrix}\begin{bmatrix}x_1(t)\\x_2(t)\end{bmatrix}
+$$
+
+De uma forma geral, temos:
+
+$$
+\begin{aligned}
+\dot x(t)&=Ax(t)+Bu(t)\\
+y(t)&=Cx(t)+Du(t)
+\end{aligned}
+$$
+
+$$
+A\in\mathbb R^{n\times n},\quad B\in\mathbb R^{n\times m},\quad C\in\mathbb R^{p\times n},\quad D\in\mathbb R^{p\times m}
+$$
+
+## Relação entre representação de estado e função de transferência
+
+Considere o sistema dado pela seguinte representação:
+
+$$
+\begin{aligned}\dot x(t)&=Ax(t)+Bu(t)\\y(t)&=Cx(t)+Du(t)\end{aligned}
+$$
+
+Aplicando a transformada de Laplace e considerando condições iniciais nulas, temos:
+
+$$
+\begin{aligned}sX(s)&=AX(s)+BU(s)\\Y(s)&=CX(s)+DU(s)\end{aligned}
+$$
+
+$$
+\begin{aligned}X(s)(sI-A)&=BU(s)\\X(s)&=BU(s)(sI-A)^{-1}\end{aligned}
+$$
+
+Substituindo, obtemos:
+
+$$
+\begin{aligned}
+Y(s)&=C\big(BU(s)(sI-A)^{-1}\big)+DU(s)\\
+Y(s)&=\big[C(sI-A)^{-1}B+D\big]U(s)
+\end{aligned}
+$$
+
+$$
+\frac{Y(s)}{U(s)}=C(sI-A)^{-1}B+D
+$$
+**Exemplo:**
+
+$$
+\begin{bmatrix}\dot x_1(t)\\\dot x_2(t)\end{bmatrix}=\begin{bmatrix}0&1\\-2&-3\end{bmatrix}\begin{bmatrix}x_1(t)\\x_2(t)\end{bmatrix}+\begin{bmatrix}0\\2\end{bmatrix}u(t)
+$$
+
+$$y(t)=\begin{bmatrix}1&0\end{bmatrix}\begin{bmatrix}x_1(t)\\x_2(t)\end{bmatrix}$$
+
+$$G(s)=C(sI-A)^{-1}B+D$$
+
+$$
+\begin{aligned}
+G(s)&=\begin{bmatrix}1&0\end{bmatrix}\left(\begin{bmatrix}s&0\\0&s\end{bmatrix}-\begin{bmatrix}0&1\\-2&-3\end{bmatrix}\right)^{-1}\begin{bmatrix}0\\2\end{bmatrix}\\
+&=\begin{bmatrix}1&0\end{bmatrix}\begin{bmatrix}s&-1\\2&s+3\end{bmatrix}^{-1}\begin{bmatrix}0\\2\end{bmatrix}
+\end{aligned}
+$$
+
+$$
+\begin{bmatrix}s&-1\\2&s+3\end{bmatrix}^{-1}=\frac{1}{s^2+3s+2}\begin{bmatrix}s+3&1\\-2&s\end{bmatrix}
+$$
+
+$$
+\begin{aligned}
+G(s)&=\begin{bmatrix}1&0\end{bmatrix}\frac{1}{s^2+3s+2}\begin{bmatrix}s+3&1\\-2&s\end{bmatrix}\begin{bmatrix}0\\2\end{bmatrix}\\
+&=\begin{bmatrix}1&0\end{bmatrix}\frac{1}{s^2+3s+2}\begin{bmatrix}2\\2s\end{bmatrix}\\
+&=\frac{2}{s^2+3s+2}
+\end{aligned}
+$$
+
+## Realização da FT
+
+$$
+G(s)=\frac{b_ms^m+b_{m-1}s^{m-1}+\cdots+b_1s+b_0}{s^n+a_{n-1}s^{n-1}+\cdots+a_1s+a_0}
+$$
+
+**Exemplo:**
+
+$$G(s)=\frac{2s+3}{s^3+5s^2+7s+3}=\frac{Y(s)}{U(s)}$$
+
+$$\frac{Y(s)}{U(s)}=\frac{2s+3}{s^3+5s^2+7s+3}\cdot\frac{W(s)}{W(s)}$$
+
+$$
+\begin{aligned}Y(s)&=(2s+3)W(s)\\U(s)&=(s^3+5s^2+7s+3)W(s)\end{aligned}
+$$
+
+Definindo $X_1(s)=W(s)$, $X_2(s)=sW(s)$ e $X_3(s)=s^2W(s)$, temos:
+
+$$
+\begin{aligned}sX_1(s)&=sW(s)=X_2(s)\\sX_2(s)&=s^2W(s)=X_3(s)\end{aligned}
+$$
+
+$$sX_3(s)=s^3W(s)$$
+
+$$
+\begin{aligned}
+
+s^3W(s)+5s^2W(s)+7sW(s)+3W(s)&=U(s)
+\\
+s^3W(s)&=-3W(s)-7sW(s)-5s^2W(s)+U(s)
+\\
+s^3W(s)&=-3X_1(s)-7X_2(s)-5X_3(s)+U(s)
+
+\end{aligned}
+$$
+
+$$
+\begin{aligned}Y(s)&=(2s+3)W(s)\\Y(s)&=3W(s)+2sW(s)\\Y(s)&=3X_1(s)+2X_2(s)\end{aligned}
+$$
+
+No domínio do tempo, temos:
+
+$$
+\begin{aligned}\dot x_1(t)&=x_2(t)\\\dot x_2(t)&=x_3(t)\\\dot x_3(t)&=-3x_1(t)-7x_2(t)-5x_3(t)+u(t)\\y(t)&=3x_1(t)+2x_2(t)\end{aligned}
+$$
+
+Na forma matricial, temos:
+
+$$
+\dot x(t)=\begin{bmatrix}0&1&0\\0&0&1\\-3&-7&-5\end{bmatrix}x(t)+\begin{bmatrix}0\\0\\1\end{bmatrix}u(t)
+$$
+
+$$y(t)=\begin{bmatrix}3&2&0\end{bmatrix}x(t)$$
+
+## Controlabilidade
+
+Considere um sistema representado por:
+
+$$\dot x(t)=Ax(t)+Bu(t)$$
+
+**Definição:** um sistema é dito controlável se, para todo estado inicial $x(t_0)=x_0$ e todo estado final $x(t_f)=x_f$, existe $u(t)$, $0\le t\le t_f$, tal que transfere o estado $x_0$ ao estado $x_f$ em um intervalo de tempo finito $t_f$ qualquer.
+
+Portanto, um sistema representado pelo par $(A,B)$ é dito controlável se, e somente se, a matriz de controlabilidade dada por:
+
+$$\mathcal C=\begin{bmatrix}B&AB&A^2B&\cdots&A^{n-1}B\end{bmatrix}$$
+
+for tal que o posto da matriz de controlabilidade seja igual a $n$ ($\operatorname{posto}(\mathcal C)=n$).
+
+**Exemplo:** considere um circuito elétrico:
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\draw (0,0) -- (5.6,0) (0,3.2) -- (5.6,3.2);
+\draw (0,0) -- (0,1.2) (0,2) -- (0,3.2);
+\draw (0,1.6) circle (.4);
+\node at (0,1.75) {$+$}; \node at (0,1.45) {$-$};
+\node[left] at (-.45,1.6) {$u(t)$};
+\draw (2.2,3.2) -- (2.2,2.505) (2.2,2.3449999999999998) -- (2.2,1.65);
+\draw (1.9600000000000002,2.505) -- (2.4400000000000004,2.505) (1.9600000000000002,2.3449999999999998) -- (2.4400000000000004,2.3449999999999998);
+\draw (2.200,1.650) -- (2.200,1.386) -- (2.305,1.261) -- (2.095,1.137) -- (2.305,1.012) -- (2.095,0.887) -- (2.305,0.763) -- (2.095,0.638) -- (2.305,0.513) -- (2.095,0.389) -- (2.200,0.264) -- (2.200,0.000);
+\fill (2.2,3.2) circle (1.3pt);
+\fill (2.2,0) circle (1.3pt);
+\node[left] at (1.9100000000000001,2.43) {$1\,\mathrm{F}$};
+\node[left] at (1.9300000000000002,.83) {$1\,\Omega$};
+\node[right] at (2.5500000000000003,2.43) {$x_1(t)$};
+\node at (2.52,2.95) {$+$}; \node at (2.52,1.9) {$-$};
+\draw (5.6,3.2) -- (5.6,2.505) (5.6,2.3449999999999998) -- (5.6,1.65);
+\draw (5.359999999999999,2.505) -- (5.84,2.505) (5.359999999999999,2.3449999999999998) -- (5.84,2.3449999999999998);
+\draw (5.600,1.650) -- (5.600,1.386) -- (5.705,1.261) -- (5.495,1.137) -- (5.705,1.012) -- (5.495,0.887) -- (5.705,0.763) -- (5.495,0.638) -- (5.705,0.513) -- (5.495,0.389) -- (5.600,0.264) -- (5.600,0.000);
+\fill (5.6,3.2) circle (1.3pt);
+\fill (5.6,0) circle (1.3pt);
+\node[left] at (5.31,2.43) {$1\,\mathrm{F}$};
+\node[left] at (5.33,.83) {$1\,\Omega$};
+\node[right] at (5.949999999999999,2.43) {$x_2(t)$};
+\node at (5.92,2.95) {$+$}; \node at (5.92,1.9) {$-$};
+\end{tikzpicture}
+\end{document}
+```
+
+**Solução:**
+
+$$V=Ri,\qquad i=i_C=C\frac{dv}{dt}$$
+
+$$
+\begin{aligned}u(t)-x_1(t)-V_{R_1}&=0\\u(t)-x_1(t)-\dot x_1(t)&=0\\\boxed{\dot x_1(t)=-x_1(t)+u(t)}&\end{aligned}
+$$
+
+$$
+\begin{aligned}u(t)-x_2(t)-V_{R_2}&=0\\u(t)-x_2(t)-\dot x_2(t)&=0\\\boxed{\dot x_2(t)=-x_2(t)+u(t)}&\end{aligned}
+$$
+
+Representando na forma matricial, temos:
+
+$$\dot x(t)=\underbrace{\begin{bmatrix}-1&0\\0&-1\end{bmatrix}}_{A_{n\times n}}x(t)+\underbrace{\begin{bmatrix}1\\1\end{bmatrix}}_B u(t)$$
+
+A matriz de controlabilidade é dada por:
+
+$$\mathcal C=\begin{bmatrix}B&AB\end{bmatrix}$$
+
+$$AB=\begin{bmatrix}-1&0\\0&-1\end{bmatrix}\begin{bmatrix}1\\1\end{bmatrix}=\begin{bmatrix}-1\\-1\end{bmatrix}$$
+
+$$\mathcal C=\begin{bmatrix}1&-1\\1&-1\end{bmatrix},\qquad\operatorname{posto}(\mathcal C)=1$$
+
+**Sistema não controlável.**
+
+$$\det(\mathcal C)=0\quad (\text{LD})$$
+
+$$\det(\mathcal C)\ne0\quad (\text{LI})$$
+
+**Exemplo:** considere um sistema dado por:
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\draw (0,0) -- (6,0) (0,0) -- (0,.9) (0,1.7) -- (0,2.6) -- (1,2.6);
+\draw (0,1.3) circle (.4);
+\node at (0,1.45) {$+$}; \node at (0,1.15) {$-$};
+\node[left] at (-.43,1.3) {$u(t)$};
+\draw (1.000,2.600) -- (1.288,2.600) -- (1.424,2.705) -- (1.560,2.495) -- (1.696,2.705) -- (1.832,2.495) -- (1.968,2.705) -- (2.104,2.495) -- (2.240,2.705) -- (2.376,2.495) -- (2.512,2.600) -- (2.800,2.600);
+\draw (3.000,2.600) -- (3.234,2.600) .. controls (3.274,2.850) and (3.527,2.850) .. (3.567,2.600) .. controls (3.607,2.850) and (3.860,2.850) .. (3.900,2.600) .. controls (3.940,2.850) and (4.193,2.850) .. (4.233,2.600) .. controls (4.273,2.850) and (4.526,2.850) .. (4.566,2.600) -- (4.800,2.600);
+\draw (2.8,2.6) -- (3,2.6) (4.8,2.6) -- (6,2.6) -- (6,2);
+\draw (6,2) -- (6,1.08) (6,0.92) -- (6,0);
+\draw (5.76,1.08) -- (6.24,1.08) (5.76,0.92) -- (6.24,0.92);
+\node[above] at (1.9,2.8) {$ R $};
+\node[above] at (3.9,2.88) {$ L $};
+\node[left] at (5.7,1) {$ C $};
+\node[right] at (6.35,1) {$ x_2(t) $};
+\node at (6.32,1.7) {$+$}; \node at (6.32,.3) {$-$};
+\draw[->] (2.05,1.3) arc (145:-145:.7);
+\node at (2.65,1.25) {$ x_1(t) $};
+\end{tikzpicture}
+\end{document}
+```
+
+$$u(t)-V_R-V_L-V_C$$
+
+$$
+\begin{aligned}i(t)&=x_1(t)\\V_R&=Rx_1(t)\\V_L&=L\frac{di(t)}{dt}=L\dot x_1(t)\\V_C&=x_2(t)\end{aligned}
+$$
+
+$$L\dot x_1(t)=-Rx_1(t)-x_2(t)+u(t)$$
+
+$$\boxed{\dot x_1(t)=-\frac RLx_1(t)-\frac1Lx_2(t)+\frac1Lu(t)}\tag{I}$$
+
+$$
+\begin{aligned}i(t)&=i_C(t)\\x_1(t)&=C\dot x_2(t)\\\boxed{\dot x_2(t)=\frac1C x_1(t)}&\end{aligned}
+$$
+
+Na forma matricial:
+
+$$\dot x(t)=\begin{bmatrix}-R/L&-1/L\\1/C&0\end{bmatrix}x(t)+\begin{bmatrix}1/L\\0\end{bmatrix}u(t)$$
+
+A matriz de controlabilidade é dada por:
+
+$$\mathcal C=\begin{bmatrix}B&AB\end{bmatrix}$$
+
+$$AB=\begin{bmatrix}-R/L&-1/L\\1/C&0\end{bmatrix}\begin{bmatrix}1/L\\0\end{bmatrix}=\begin{bmatrix}-R/L^2\\1/(LC)\end{bmatrix}$$
+
+$$\mathcal C=\begin{bmatrix}1/L&-R/L^2\\0&1/(LC)\end{bmatrix}$$
+
+$\det(\mathcal C)\ne0\Rightarrow$ é LI. **Sistema controlável.**
+
+## Controle por realimentação de estado
+
+Considere um sistema que é representado por:
+
+$$\begin{cases}\dot x(t)=Ax(t)+Bu(t)\\y(t)=Cx(t)+Du(t)\end{cases}$$
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\tikzset{block/.style={draw,minimum width=8mm,minimum height=8mm,inner sep=2pt},sum/.style={draw,circle,minimum size=5.5mm,inner sep=0pt}}
+\node[sum] (s1) at (1,0) {};
+\node[block] (b) at (2.6,0) {$B$};
+\node[sum] (s2) at (4.5,0) {};
+\node[block] (int) at (6.25,0) {$\int$};
+\node[block] (c) at (8.6,0) {$C$};
+\node[sum] (s3) at (10.4,0) {};
+\node[block] (d) at (6.25,1.45) {$D$};
+\node[block] (a) at (6.25,-1.4) {$A$};
+\node[block] (k) at (6.25,-2.65) {$K$};
+\draw[->] (-.15,0) node[left] {$r(t)$} -- (s1.west);
+\draw[->] (s1.east) -- node[above] {$u(t)$} (b.west);
+\draw[->] (b.east) -- node[above] {$Bu(t)$} (s2.west);
+\draw[->] (s2.east) -- node[above] {$\dot x(t)$} (int.west);
+\draw[->] (int.east) -- node[above] {$x(t)$} (c.west);
+\draw[->] (c.east) -- node[above] {$Cx(t)$} (s3.west);
+\draw[->] (s3.east) -- (11.45,0) node[right] {$y(t)$};
+\draw[->] (1.85,0) |- (d.west);
+\draw[->] (d.east) -- node[above] {$Du(t)$} (10.4,1.45) -- (s3.north);
+\draw[->] (7.55,0) |- (a.east);
+\draw[->] (a.west) -- node[above] {$Ax(t)$} (4.5,-1.4) -- (s2.south);
+\draw[->] (7.55,-1.4) |- (k.east);
+\draw[->] (k.west) -- node[above] {$Kx(t)$} (1,-2.65) -- (s1.south);
+\foreach \x/\y in {1.85/0,7.55/0,7.55/-1.4} {\fill (\x,\y) circle (1.4pt);}
+\node at (.6,.22) {$+$}; \node at (.7,-.43) {$-$};
+\node at (4.05,-.20) {$+$}; \node at (4.18,-.43) {$+$};
+\node at (9.94,-.22) {$+$}; \node at (10.7,.42) {$+$};
+\node[below,font=\scriptsize] at (2.6,-.45) {matriz};
+\node[below,font=\scriptsize] at (8.6,-.45) {matriz};
+\node[below,font=\scriptsize] at (6.25,-1.85) {matriz};
+\node[below,font=\scriptsize] at (6.25,-3.1) {matriz proporcional};
+\end{tikzpicture}
+\end{document}
+```
+
+$$u(t)=-Kx(t)+r(t)$$
+
+$$K=\begin{bmatrix}K_1&K_2&K_3&\cdots&K_n\end{bmatrix}$$
+
+**Malha fechada:**
+
+$$
+\begin{aligned}\dot x(t)&=Ax(t)+B(-Kx(t)+r(t))\\y(t)&=Cx(t)+D(-Kx(t)+r(t))\end{aligned}
+$$
+
+$$
+\begin{aligned}\dot x(t)&=Ax(t)-BKx(t)+Br(t)\\y(t)&=Cx(t)-DKx(t)+Dr(t)\end{aligned}
+$$
+
+$$
+\begin{aligned}\dot x(t)&=(A-BK)x(t)+Br(t)\\y(t)&=(C-DK)x(t)+Dr(t)\end{aligned}
+$$
+
+- Controle: polos dominantes.
+- Álgebra: 1) autovalores — determinante da matriz (acha os polos dominantes); 2) autovetores.
+
+**Observação:** o comportamento do sistema em malha fechada é determinado pelos autovalores de $A-BK$.
+
+## Projeto por alocação de polos
+
+Consiste em determinar a matriz $K$, de modo que os autovalores de $A-BK$ sejam os desejados.
+
+**Teorema:** se o par $(A,B)$ for controlável, então os valores de $A-BK$ podem ser alocados arbitrariamente.
+
+**Exemplo:** calcule a matriz $K$ de modo que os autovalores de $(A-BK)$ sejam iguais a $-1$ e $-2$ para o seguinte sistema:
+
+$$\dot x(t)=\begin{bmatrix}-1&2\\-2&-1\end{bmatrix}x(t)+\begin{bmatrix}1\\0\end{bmatrix}u(t)$$
+
+$$y(t)=\begin{bmatrix}0&1\end{bmatrix}x(t)$$
+
+**Solução:** a matriz de controlabilidade do sistema é dada por:
+
+$$\mathcal C=\begin{bmatrix}B&AB\end{bmatrix}$$
+
+$$AB=\begin{bmatrix}-1&2\\-2&-1\end{bmatrix}\begin{bmatrix}1\\0\end{bmatrix}=\begin{bmatrix}-1\\-2\end{bmatrix}$$
+
+$$\mathcal C=\begin{bmatrix}1&-1\\0&-2\end{bmatrix}$$
+
+$\det(\mathcal C)\ne0$, $\operatorname{posto}(\mathcal C)=2$ (sistema controlável).
+
+**1) Polinômio desejado:**
+
+$$\Delta_d=(s+2)(s+1)$$
+
+$$\Delta_d=s^2+3s+2\tag{1}$$
+
+**2) Polinômio de malha fechada:**
+
+$$\Delta_{mf}(s)=\det(A-BK-sI)$$
+
+$$
+\begin{aligned}A-BK-sI&=\begin{bmatrix}-1&2\\-2&-1\end{bmatrix}-\begin{bmatrix}1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2\end{bmatrix}-\begin{bmatrix}s&0\\0&s\end{bmatrix}\\
+&=\begin{bmatrix}-1&2\\-2&-1\end{bmatrix}-\begin{bmatrix}K_1&K_2\\0&0\end{bmatrix}-\begin{bmatrix}s&0\\0&s\end{bmatrix}\\
+&=\begin{bmatrix}-1-K_1-s&2-K_2\\-2&-1-s\end{bmatrix}\end{aligned}
+$$
+
+$$
+\begin{aligned}\Delta_{mf}&=\begin{vmatrix}-1-K_1-s&2-K_2\\-2&-1-s\end{vmatrix}\\
+&=(-1-K_1-s)(-1-s)-(-2)(2-K_2)\\
+&=1+K_1+s+s+sK_1+s^2+4-2K_2\\
+&=s^2+s(K_1+2)+K_1-2K_2+5\end{aligned}
+$$
+
+Fazendo a igualdade de polinômios, temos:
+
+$$\begin{cases}\Delta_d=s^2+3s+2\\\Delta_{mf}=s^2+s(K_1+2)+K_1-2K_2+5\end{cases}$$
+
+$$s^2+3s+2=s^2+s(K_1+2)+K_1-2K_2+5$$
+
+**I)**
+
+$$s(K_1+2)=3s$$
+
+$$K_1=3-2\Rightarrow\boxed{K_1=1}$$
+
+**II)**
+
+$$
+\begin{aligned}K_1-2K_2+5&=2\\1-2K_2+5&=2\\-2K_2&=-5+2-1\\K_2&=\frac{-5+2-1}{-2}=\frac{-4}{-2}\end{aligned}
+$$
+
+$$\boxed{K_2=2}$$
+
+## Seguidor robusto de referência
+
+Considere o seguinte diagrama de blocos:
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\tikzset{block/.style={draw,minimum width=7mm,minimum height=8mm,inner sep=2pt},sum/.style={draw,circle,minimum size=5.5mm,inner sep=0pt}}
+\node[sum] (s1) at (0.9,0) {};
+\node[block] (i1) at (2.2,0) {$\int$};
+\node[block] (ki) at (3.6,0) {$K_I$};
+\node[sum] (s2) at (5.05,0) {};
+\node[block] (b) at (6.2,0) {$B$};
+\node[sum] (s3) at (7.45,0) {};
+\node[block] (i2) at (8.75,0) {$\int$};
+\node[block] (c) at (10.7,0) {$C$};
+\node[block] (a) at (8.75,-1.15) {$A$};
+\node[block] (k) at (8.75,-2.25) {$K$};
+\draw[->] (-.1,0) node[left] {$r(t)$} -- (s1.west);
+\draw[->] (s1.east) -- node[above] {$e$} (i1.west);
+\draw[->] (i1.east) -- node[above] {$v$} (ki.west);
+\draw[->] (ki.east) -- node[above] {$K_Iv$} (s2.west);
+\draw[->] (s2.east) -- node[above] {$u(t)$} (b.west);
+\draw[->] (b.east) -- (s3.west);
+\draw[->] (s3.east) -- (i2.west);
+\draw[->] (i2.east) -- node[above] {$x(t)$} (c.west);
+\draw[->] (c.east) -- (12,0) node[right] {$y(t)$};
+\draw[->] (9.8,0) |- (a.east);
+\draw[->] (a.west) -| (s3.south);
+\draw[->] (9.8,-1.15) |- (k.east);
+\draw[->] (k.west) -- node[above] {$Kx(t)$} (5.05,-2.25) -- (s2.south);
+\draw[->] (11.5,0) -- (11.5,-3.45) -- (.9,-3.45) -- (s1.south);
+\foreach \x/\y in {9.8/0,9.8/-1.15,11.5/0} {\fill (\x,\y) circle (1.4pt);}
+\foreach \x/\y/\s in {.5/.23/+, .55/-.42/-,4.65/-.18/+,5.35/-.43/-,7.05/.23/+,7.1/-.43/+} {\node at (\x,\y) {$\s$};}
+\draw (1.8,-.65) -- (1.8,-.82) -- (4,-.82) -- (4,-.65);
+\node[below,font=\scriptsize,align=center] at (2.9,-.85) {ganho + integrador\\PI};
+\node[below,font=\scriptsize] at (8.75,-2.7) {proporcional};
+\end{tikzpicture}
+\end{document}
+```
+
+**Sistema:**
+
+$$\dot x(t)=Ax(t)+Bu(t)\tag{I}$$
+
+$$y(t)=Cx(t)\tag{II}$$
+
+**Lei de controle:**
+
+$$u(t)=-Kx(t)+K_Iv\tag{III}$$
+
+$$e(t)=r(t)-y(t)\tag{IV}$$
+
+Substituindo (III) em (I):
+
+$$
+\begin{aligned}\dot x(t)&=Ax(t)+B(-Kx(t)+K_Iv)\\\dot x(t)&=Ax(t)-BKx(t)+BK_Iv\end{aligned}
+$$
+
+$$\dot v=e=r(t)-y(t)\tag{V}$$
+
+Substituindo (II) em (V):
+
+$$\boxed{\dot v=e=r(t)-Cx(t)}$$
+
+Na forma matricial, temos:
+
+$$
+\begin{bmatrix}\dot x\\\dot v\end{bmatrix}=
+\underbrace{\begin{bmatrix}A&0\\-C&0\end{bmatrix}}_{\hat A}\begin{bmatrix}x\\v\end{bmatrix}-
+\underbrace{\begin{bmatrix}B\\0\end{bmatrix}}_{\hat B}
+\underbrace{\begin{bmatrix}K&K_I\end{bmatrix}}_{\hat K}\begin{bmatrix}x\\v\end{bmatrix}+
+\begin{bmatrix}0\\1\end{bmatrix}r
+$$
+
+**Teorema:** se o sistema representado pelo par $(A,B)$ for controlável, então o par $(\hat A,\hat B)$ também é controlável.
+
+> Obs.: em geral, a controlabilidade do sistema aumentado exige condições adicionais.
+
+**Exemplo:** calcule $K$ e $K_I$ de modo a se ter rastreamento de referência constante e os seguintes autovalores de malha fechada: $-2$, $-2$ e $-2$, para o seguinte sistema:
+
+$$\dot x(t)=\begin{bmatrix}-1&2\\2&-1\end{bmatrix}x(t)+\begin{bmatrix}0\\1\end{bmatrix}u(t)$$
+
+$$y(t)=\begin{bmatrix}0&1\end{bmatrix}x(t)$$
+
+**Solução:**
+
+$$\mathcal C=\begin{bmatrix}B&AB\end{bmatrix}$$
+
+$$AB=\begin{bmatrix}-1&2\\2&-1\end{bmatrix}\begin{bmatrix}0\\1\end{bmatrix}=\begin{bmatrix}2\\-1\end{bmatrix}$$
+
+$$\mathcal C=\begin{bmatrix}0&2\\1&-1\end{bmatrix}$$
+
+$\det(\mathcal C)\ne0\Rightarrow$ controlável. Posto = 2.
+
+$$\hat A=\begin{bmatrix}A&0\\C&0\end{bmatrix},\qquad\hat B=\begin{bmatrix}B\\0\end{bmatrix}$$
+
+> Obs.: nesta última expressão aparece $C$, sem o sinal negativo; a matriz numérica abaixo utiliza $-C$.
+
+$$\hat A=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix},\qquad\hat B=\begin{bmatrix}0\\1\\0\end{bmatrix}$$
+
+A matriz de controlabilidade é dada por:
+
+$$\mathcal C=\begin{bmatrix}\hat B&\hat A\hat B&\hat A^2\hat B\end{bmatrix}$$
+
+$$\hat A\hat B=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}\begin{bmatrix}0\\1\\0\end{bmatrix}=\begin{bmatrix}2\\-1\\-1\end{bmatrix}$$
+
+$$
+\begin{aligned}\hat A^2\hat B&=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}\begin{bmatrix}0\\1\\0\end{bmatrix}\\
+&=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}\begin{bmatrix}2\\-1\\-1\end{bmatrix}=\begin{bmatrix}-4\\5\\1\end{bmatrix}\end{aligned}
+$$
+
+**1) Polinômio desejado:**
+
+$$\Delta_d=(s+2)(s+2)(s+2)$$
+
+$$\Delta_d=s^3+6s^2+12s+8$$
+
+**2) Polinômio de malha fechada:**
+
+$$\Delta_{mf}(s)=\det(\hat A-\hat B\hat K-sI)$$
+
+$$\hat K=\begin{bmatrix}K&K_I\end{bmatrix}\Rightarrow\hat K=\begin{bmatrix}K_1&K_2&K_I\end{bmatrix}$$
+
+$$
+\hat A-\hat B\hat K-sI=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}-\begin{bmatrix}0\\1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2&K_I\end{bmatrix}-\begin{bmatrix}s&0&0\\0&s&0\\0&0&s\end{bmatrix}
+$$
+
+$$\hat A-\hat B\hat K-sI=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}-\begin{bmatrix}0&0&0\\K_1&K_2&K_I\\0&0&0\end{bmatrix}-\begin{bmatrix}s&0&0\\0&s&0\\0&0&s\end{bmatrix}$$
+
+$$\hat A-\hat B\hat K-sI=\begin{bmatrix}-1-s&2&0\\2-K_1&-1-K_2-s&-K_I\\0&-1&-s\end{bmatrix}$$
+
+$$\det(\hat A-\hat B\hat K-sI)=\begin{vmatrix}-1-s&2&0\\2-K_1&-1-K_2-s&-K_I\\0&-1&-s\end{vmatrix}$$
+
+Aplicando a regra de Sarrus, conforme o desenvolvimento manuscrito:
+
+$$
+\begin{aligned}
+&=(-1-s)(-1-K_2-s)(-s)\\
+&\quad-\big[(-1-s)(-K_I)(-1)+2(-s)(2-K_1)\big]\\
+&=(s^2+s)(-1-K_2-s)-\big[(-K_Is-K_I)+(-4s+2K_1s)\big]\\
+&=-s^3-(K_2+2)s^2+(-K_2-1)s-s(-K_I-4+2K_1)+K_I\\
+&=-s^3-(K_2+2)s^2-(K_2+2K_1-K_I-3)s+K_I
+\end{aligned}
+$$
+
+Multiplicando por $-1$, o polinômio fica:
+
+$$s^3+(K_2+2)s^2+(K_2+2K_1-K_I-3)s-K_I$$
+
+Comparando com o polinômio desejado:
+
+$$-K_I=8\Rightarrow\boxed{K_I=-8}$$
+
+$$K_2+2=6\Rightarrow\boxed{K_2=4}$$
+
+$$K_2+2K_1-K_I-3=12\Rightarrow\boxed{K_1=\frac32}$$
+
+$$\boxed{\hat K=\begin{bmatrix}\frac32&4&-8\end{bmatrix}}$$
+
+## Observabilidade
+
+Considere um sistema representado por:
+
+$$\begin{aligned}\dot x(t)&=Ax(t)+Bu(t)\\y(t)&=Cx(t)+Du(t)\end{aligned}$$
+
+**Definição:** um sistema é dito observável se, para todo $x(0)$ desconhecido, o conhecimento da entrada $u(t)$ e da saída $y(t)$ em qualquer intervalo de tempo finito é suficiente para se determinar de forma única o estado inicial $x(0)$.
+
+Portanto, um sistema representado pelo par $(A,C)$ é observável se, e somente se, a matriz de observabilidade dada por:
+
+$$\mathcal O=\begin{bmatrix}C\\CA\\\vdots\\CA^{n-1}\end{bmatrix}$$
+
+for tal que o posto de $\mathcal O$ seja $n$.
+
+- $n$: ordem da matriz $A$.
+- Se for igual, é observável; caso contrário, não é.
+
+**Exemplo:** considere o seguinte circuito:
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\draw (1.4,2.65) -- (1.4,3.25) -- (1.8,3.25) (1.4,2.65) -- (1.4,2.05) -- (1.8,2.05);
+\draw (1.800,3.250) -- (2.056,3.250) -- (2.177,3.355) -- (2.298,3.145) -- (2.419,3.355) -- (2.540,3.145) -- (2.660,3.355) -- (2.781,3.145) -- (2.902,3.355) -- (3.023,3.145) -- (3.144,3.250) -- (3.400,3.250);
+\draw (1.800,2.050) -- (2.008,2.050) .. controls (2.044,2.300) and (2.268,2.300) .. (2.304,2.050) .. controls (2.340,2.300) and (2.564,2.300) .. (2.600,2.050) .. controls (2.636,2.300) and (2.860,2.300) .. (2.896,2.050) .. controls (2.932,2.300) and (3.156,2.300) .. (3.192,2.050) -- (3.400,2.050);
+\draw (3.4,3.25) -- (3.8,3.25) -- (3.8,2.05) -- (3.4,2.05);
+\draw (3.8,2.65) -- (8,2.65) (4.8,2.65) -- (4.8,2.1) (6.8,2.65) -- (6.8,2.1);
+\draw (4.800,2.100) -- (4.800,1.764) -- (4.905,1.605) -- (4.695,1.447) -- (4.905,1.288) -- (4.695,1.129) -- (4.905,0.971) -- (4.695,0.812) -- (4.905,0.653) -- (4.695,0.495) -- (4.800,0.336) -- (4.800,0.000);
+\draw (6.8,2.1) -- (6.8,1.1300000000000001) (6.8,0.9700000000000001) -- (6.8,0);
+\draw (6.56,1.1300000000000001) -- (7.04,1.1300000000000001) (6.56,0.9700000000000001) -- (7.04,0.9700000000000001);
+\draw (1.4,2.65) -- (0,2.65) (0,0) -- (8,0);
+\foreach \x/\y in {1.4/2.65,3.8/2.65,4.8/2.65,6.8/2.65,4.8/0,6.8/0} {\fill (\x,\y) circle (1.4pt);}
+\node[above] at (2.6,3.4) {$2\,\Omega$};
+\node[below] at (2.6,1.95) {$1\,\mathrm{H}$};
+\node[left] at (4.52,1.05) {$1\,\Omega$};
+\node[left] at (6.5,1.05) {$1\,\mathrm{F}$};
+\draw[->,blue] (2.45,2.91) -- (3.3,2.91); \node[left,blue,font=\scriptsize] at (2.45,2.91) {$I_{R_1}$};
+\draw[->,red] (2.45,2.48) -- (3.3,2.48); \node[left,red,font=\scriptsize] at (2.45,2.48) {$I_L$};
+\draw[->,blue] (5.22,2.1) -- (5.22,1.35) node[midway,right,font=\scriptsize] {$I_{R_2}$};
+\draw (0,2.65) -- (0,1.73) (0,.87) -- (0,0);
+\draw (0,1.3) circle (.43); \draw[->] (0,1.02) -- (0,1.58);
+\node[left] at (-.45,1.3) {$u(t)$};
+\draw[->] (2.75,1.3) -- (3.65,1.3) node[midway,below] {$x_1(t)$};
+\draw (8,2.65) circle (1.5pt) (8,0) circle (1.5pt);
+\node at (8,2.2) {$+$}; \node at (8,.45) {$-$};
+\node at (8,1.3) {$x_2(t)$};
+\end{tikzpicture}
+\end{document}
+```
+
+$$u(t)=I_{R_1}+I_L=I_{R_1}+x_1(t)$$
+
+$$I_{R_1}=\frac{V_{R_1}}2=\frac{V_L}2=\frac{L\,di(t)/dt}{2}=\frac{\dot x_1(t)}2$$
+
+$$\dot x_1(t)=-2x_1(t)+2u(t)$$
+
+$$\boxed{\dot x_1(t)=-2x_1(t)+2u(t)}$$
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\draw (1.4,2.65) -- (1.4,3.25) -- (1.8,3.25) (1.4,2.65) -- (1.4,2.05) -- (1.8,2.05);
+\draw (1.800,3.250) -- (2.056,3.250) -- (2.177,3.355) -- (2.298,3.145) -- (2.419,3.355) -- (2.540,3.145) -- (2.660,3.355) -- (2.781,3.145) -- (2.902,3.355) -- (3.023,3.145) -- (3.144,3.250) -- (3.400,3.250);
+\draw (1.800,2.050) -- (2.008,2.050) .. controls (2.044,2.300) and (2.268,2.300) .. (2.304,2.050) .. controls (2.340,2.300) and (2.564,2.300) .. (2.600,2.050) .. controls (2.636,2.300) and (2.860,2.300) .. (2.896,2.050) .. controls (2.932,2.300) and (3.156,2.300) .. (3.192,2.050) -- (3.400,2.050);
+\draw (3.4,3.25) -- (3.8,3.25) -- (3.8,2.05) -- (3.4,2.05);
+\draw (3.8,2.65) -- (8,2.65) (4.8,2.65) -- (4.8,2.1) (6.8,2.65) -- (6.8,2.1);
+\draw (4.800,2.100) -- (4.800,1.764) -- (4.905,1.605) -- (4.695,1.447) -- (4.905,1.288) -- (4.695,1.129) -- (4.905,0.971) -- (4.695,0.812) -- (4.905,0.653) -- (4.695,0.495) -- (4.800,0.336) -- (4.800,0.000);
+\draw (6.8,2.1) -- (6.8,1.1300000000000001) (6.8,0.9700000000000001) -- (6.8,0);
+\draw (6.56,1.1300000000000001) -- (7.04,1.1300000000000001) (6.56,0.9700000000000001) -- (7.04,0.9700000000000001);
+\draw (1.4,2.65) -- (0,2.65) (0,0) -- (8,0);
+\foreach \x/\y in {1.4/2.65,3.8/2.65,4.8/2.65,6.8/2.65,4.8/0,6.8/0} {\fill (\x,\y) circle (1.4pt);}
+\node[above] at (2.6,3.4) {$2\,\Omega$};
+\node[below] at (2.6,1.95) {$1\,\mathrm{H}$};
+\node[left] at (4.52,1.05) {$1\,\Omega$};
+\node[left] at (6.5,1.05) {$1\,\mathrm{F}$};
+\draw[->,blue] (2.45,2.91) -- (3.3,2.91); \node[left,blue,font=\scriptsize] at (2.45,2.91) {$I_{R_1}$};
+\draw[->,red] (2.45,2.48) -- (3.3,2.48); \node[left,red,font=\scriptsize] at (2.45,2.48) {$I_L$};
+\draw[->,blue] (5.22,2.1) -- (5.22,1.35) node[midway,right,font=\scriptsize] {$I_{R_2}$};
+\draw[->,red] (7.25,2.4) -- (7.25,1.65) node[midway,right,font=\scriptsize] {$i_C$};
+\end{tikzpicture}
+\end{document}
+```
+
+$$
+\begin{aligned}u(t)&=i_C+i_{R_2}\\i_C&=C\frac{dv}{dt}\\i_C&=\dot x_2(t)\\i_{R_2}&=x_2(t)\end{aligned}
+$$
+
+$$\begin{aligned}u(t)&=\dot x_2(t)+x_2(t)\\\dot x_2(t)&=-x_2(t)+u(t)\\y(t)&=x_2(t)\end{aligned}$$
+
+$$\dot x(t)=\begin{bmatrix}-2&0\\0&-1\end{bmatrix}x(t)+\begin{bmatrix}2\\1\end{bmatrix}u(t)$$
+
+$$y(t)=\begin{bmatrix}0&1\end{bmatrix}x(t)$$
+
+A matriz de observabilidade:
+
+$$\mathcal O=\begin{bmatrix}C\\CA\end{bmatrix}$$
+
+$$CA=\begin{bmatrix}0&1\end{bmatrix}\begin{bmatrix}-2&0\\0&-1\end{bmatrix}=\begin{bmatrix}0&-1\end{bmatrix}$$
+
+$$\mathcal O=\begin{bmatrix}0&1\\0&-1\end{bmatrix}\Rightarrow\det(\mathcal O)=0$$
+
+**Sistema não observável.**
+
+## Observador de estado
+
+Tem por objetivo estimar os valores das variáveis de estado que não são medidas.
+
+```tikz
+\begin{document}
+\begin{tikzpicture}[line width=.65pt,>=stealth]
+\tikzset{block/.style={draw,minimum width=9mm,minimum height=8mm,inner sep=2pt},sum/.style={draw,circle,minimum size=5.5mm,inner sep=0pt}}
+\node[block] (b1) at (2,2.3) {$B$};
+\node[sum] (s1) at (4,2.3) {};
+\node[block] (i1) at (5.7,2.3) {$\int$};
+\node[block] (c1) at (8,2.3) {$C$};
+\node[block] (a1) at (5.7,1.1) {$A$};
+\node[block] (b2) at (2,-1.05) {$B$};
+\node[sum] (s2) at (4,-1.05) {};
+\node[block] (i2) at (5.7,-1.05) {$\int$};
+\node[block] (c2) at (8,-1.05) {$C$};
+\node[block] (a2) at (5.7,-2.25) {$A$};
+\node[sum] (err) at (9.8,.05) {};
+\node[block] (l) at (6.6,.05) {$L$};
+\draw[->] (0,2.3) node[left] {$u(t)$} -- (b1.west);
+\draw[->] (.85,2.3) |- (b2.west);
+\draw[->] (b1.east) -- (s1.west);
+\draw[->] (s1.east) -- (i1.west);
+\draw[->] (i1.east) -- node[above] {$x(t)$} (c1.west);
+\draw[->] (c1.east) -- (10.65,2.3) node[right] {$y(t)$};
+\draw[->] (6.85,2.3) |- (a1.east);
+\draw[->] (a1.west) -| (s1.south);
+\draw[->] (b2.east) -- (s2.west);
+\draw[->] (s2.east) -- (i2.west);
+\draw[->] (i2.east) -- node[above] {$\hat x(t)$} (c2.west);
+\draw[->] (c2.east) -- (10.65,-1.05) node[right] {$\hat y(t)$};
+\draw[->] (6.85,-1.05) |- (a2.east);
+\draw[->] (a2.west) -| (s2.south);
+\draw[->] (9.8,2.3) -- (err.north);
+\draw[->] (9.8,-1.05) -- (err.south);
+\draw[->] (err.west) -- (l.east);
+\draw[->] (l.west) -| (s2.north);
+\foreach \x/\y in {.85/2.3,6.85/2.3,6.85/-1.05,9.8/2.3,9.8/-1.05} {\fill (\x,\y) circle (1.4pt);}
+\foreach \x/\y/\s in {3.6/2.52/+,3.7/1.86/+,3.58/-1.25/+,4.3/-.62/+,4.3/-1.49/+,10.12/.45/+,10.12/-.35/-} {\node at (\x,\y) {$\s$};}
+\end{tikzpicture}
+\end{document}
+```
+
+**Sistema:**
+
+$$\begin{cases}\dot x(t)=Ax(t)+Bu(t)\\y(t)=Cx(t)\end{cases}$$
+
+**Observador:**
+
+$$\begin{cases}\dot{\hat x}(t)=A\hat x(t)+Bu(t)\\\hat y(t)=C\hat x(t)\end{cases}$$
+
+O erro de observação é dado por:
+
+$$e(t)=x(t)-\hat x(t)$$
+
+$$
+\begin{aligned}\dot e(t)&=\dot x(t)-\dot{\hat x}(t)\\
+\dot e(t)&=Ax(t)+Bu(t)-(A\hat x(t)+Bu(t))\\
+\dot e(t)&=Ax(t)+Bu(t)-A\hat x(t)-Bu(t)\\
+\dot e(t)&=Ax(t)-A\hat x(t)\\
+\dot e(t)&=A(x(t)-\hat x(t))\\
+\dot e(t)&=Ae(t)
+\end{aligned}
+$$
+
+**Observador em malha fechada:**
+
+$$
+\begin{aligned}\dot{\hat x}(t)&=A\hat x(t)+Bu(t)+L(y(t)-\hat y(t))\\
+\hat y(t)&=C\hat x(t)\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\dot e(t)&=\dot x(t)-\dot{\hat x}(t)\\
+\dot e(t)&=Ax(t)+Bu(t)-[A\hat x(t)+Bu(t)+L(y(t)-\hat y(t))]\\
+\dot e(t)&=Ax(t)+Bu(t)-A\hat x(t)-Bu(t)-L(y(t)-\hat y(t))\\
+\dot e(t)&=Ax(t)-A\hat x(t)-L(y(t)-\hat y(t))
+\end{aligned}
+$$
+
+$$y(t)=Cx(t)\qquad\text{e}\qquad\hat y(t)=C\hat x(t)$$
+
+$$
+\begin{aligned}\dot e(t)&=Ax(t)-A\hat x(t)-LC[x(t)-\hat x(t)]\\
+\dot e(t)&=Ae-LCe\\
+\dot e(t)&=e(A-LC)
+\end{aligned}
+$$
+
+Autovalores de $A-LC$:
+
+$$L=\begin{bmatrix}l_1&l_2&\cdots&l_n\end{bmatrix}^{T}$$
+
+**Se estimar corretamente, o erro é nulo.**
+
+| Símbolo | Significado |
+| --- | --- |
+| $\hat x$ | Estado estimado |
+| $x$ | Estado |
+| $\dot{\hat x}$ | Derivada do estado estimado |
+| $\dot x$ | Derivada do estado |
+
+**Teorema:** os autovalores de $A-LC$ podem ser arbitrariamente alocados por uma escolha adequada de $L$ se, e somente se, o sistema representado pelo par $(A,C)$ for observável.
+
+**Exemplo:** considere o seguinte sistema:
+
+$$\dot x(t)=\begin{bmatrix}-1&2\\2&-1\end{bmatrix}x(t)+\begin{bmatrix}1\\0\end{bmatrix}u(t)$$
+
+$$y(t)=\begin{bmatrix}0&1\end{bmatrix}x(t)$$
+
+Calcule a matriz $L$ de modo a alocar os autovalores de $A-LC$ em $-12$ e $-12$.
+
+**Solução:**
+
+$$\mathcal O=\begin{bmatrix}C\\CA\end{bmatrix}$$
+
+$$CA=\begin{bmatrix}0&1\end{bmatrix}\begin{bmatrix}-1&2\\2&-1\end{bmatrix}=\begin{bmatrix}2&-1\end{bmatrix}$$
+
+$$\mathcal O=\begin{bmatrix}0&1\\2&-1\end{bmatrix}\Rightarrow\det(\mathcal O)\ne0$$
+
+**Sistema observável.**
+
+**1) Polinômio desejado:**
+
+$$\Delta_d=(s+12)(s+12)$$
+
+$$\Delta_d=s^2+24s+144$$
+
+**2) Polinômio de malha fechada:**
+
+$$\Delta_{mf}(s)=\det(A-LC-sI)$$
+
+$$
+\begin{aligned}A-LC-sI&=\begin{bmatrix}-1&2\\2&-1\end{bmatrix}-\begin{bmatrix}l_1\\l_2\end{bmatrix}\begin{bmatrix}0&1\end{bmatrix}-\begin{bmatrix}s&0\\0&s\end{bmatrix}\\
+&=\begin{bmatrix}-1&2\\2&-1\end{bmatrix}-\begin{bmatrix}0&l_1\\0&l_2\end{bmatrix}-\begin{bmatrix}s&0\\0&s\end{bmatrix}\\
+&=\begin{bmatrix}-1-s&2-l_1\\2&-1-l_2-s\end{bmatrix}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}\Delta_{mf}(s)&=(-1-s)(-1-l_2-s)-2(2-l_1)\\
+&=1+l_2+s+s+l_2s+s^2+2l_1-4\\
+&=s^2+(2+l_2)s+2l_1+l_2-3
+\end{aligned}
+$$
+
+Comparando com o polinômio desejado:
+
+$$2+l_2=24\Rightarrow\boxed{l_2=22}$$
+
+$$l_2+2l_1-3=144\Rightarrow\boxed{l_1=62{,}5}$$
+
+$$\boxed{L=\begin{bmatrix}62{,}5&22\end{bmatrix}^{T}}$$
