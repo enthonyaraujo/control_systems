@@ -224,10 +224,8 @@ $$
 O coeficiente de ganho $K$ é dado por:
 
 $$
-K=\frac{|s-z_1||s-z_2|\cdots|s-z_m|}{|s-p_1||s-p_2|\cdots|s-p_n|}
+K=\frac{|s-p_1||s-p_2|\cdots|s-p_n|}{|s-z_1||s-z_2|\cdots|s-z_m|}
 $$
-
-> Obs.: conferir a expressão de $K$ — a razão está invertida em relação à condição de módulo.
 
 Considerando a equação característica, temos:
 
@@ -404,8 +402,6 @@ $$
 G(s)H(s)=\frac{KN(s)}{D(s)},\qquad D(s)\neq0,\quad D(s)\geq N(s)
 $$
 
-> Obs.: o manuscrito alterna entre incluir $K$ em $G(s)H(s)$ e escrevê-lo separadamente.
-
 Reescrevendo a equação característica:
 
 $$
@@ -425,14 +421,12 @@ $$
 $$
 
 $$
--\left[\frac{D'(s)N(s)-D(s)N'(s)}{N(s)}\right]=0
+-\left[\frac{D'(s)N(s)-D(s)N'(s)}{N(s)^2}\right]=0
 $$
 
 $$
 D'(s)N(s)-D(s)N'(s)=0
 $$
-
-> Obs.: conferir o denominador da derivada — pela regra do quociente, deve ser $N(s)^2$.
 
 **Exemplo:**
 
@@ -471,8 +465,6 @@ Os pontos de cruzamento com o eixo imaginário são obtidos considerando $s=0\pm
 $$
 D(j\omega)+KN(j\omega)=0+j\omega
 $$
-
-> Obs.: na aplicação da equação característica, o lado direito é zero.
 
 A parte real $D(j\omega)$ e a parte imaginária $KN(j\omega)$ dependem de $K$ e $\omega$ e devem ser nulas. Portanto, a solução destas equações determina os pontos de cruzamento com o eixo imaginário.
 
@@ -1077,8 +1069,6 @@ $$
 - Zeros anotados: $z=-3\pm1{,}73j$ ($m=2$).
 - Polos: $0,-2,-2$ ($n=3$).
 
-> Obs.: conferir o enunciado — os zeros complexos e a resolução correspondem a $s^2+6s+12$, e não a $s^2+6s+5$.
-
 **Solução:**
 
 **1. Marcar polos e zeros:**
@@ -1382,4 +1372,3 @@ Exercício para casa:
 - $K=1$ ($K_t\geq0$).
 - $K=0$ ($K_t\geq0$).
 
-> Obs.: parte de um cálculo no quadro está cortada.

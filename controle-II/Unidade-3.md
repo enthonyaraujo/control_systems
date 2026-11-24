@@ -37,10 +37,8 @@ $$
 $$
 
 $$
-\boxed{\frac{d^2y(t)}{dt^2}+3\frac{dy(t)}{dt}+2y(t)=u(t)}
+\boxed{\frac{d^2y(t)}{dt^2}+3\frac{dy(t)}{dt}+2y(t)=2u(t)}
 $$
-
-> Obs.: na equação em destaque está anotado $u(t)$; pelos valores do circuito e pelos cálculos seguintes, o termo é $2u(t)$.
 
 Aplicando Laplace, temos:
 
@@ -70,7 +68,7 @@ Definindo $x_1(t)=y(t)$ e $x_2(t)=\dot y(t)$ como variáveis de estado, temos:
 
 $$
 \begin{aligned}
-\dot x_1(t)&=\dot y(t)=x_2(t)\tag{1}\\
+\dot x_1(t)&=\dot y(t)=x_2(t)\\
 \dot x_2(t)&=\ddot y(t)
 \end{aligned}
 $$
@@ -149,9 +147,6 @@ $$
 $$
 \frac{Y(s)}{U(s)}=C(sI-A)^{-1}B+D
 $$
-
-> Obs.: a ordem dos fatores nos passos intermediários está como no caderno; para vetores-coluna, $X(s)=(sI-A)^{-1}BU(s)$.
-
 **Exemplo:**
 
 $$
@@ -216,11 +211,19 @@ sX_3(s)=s^3W(s)
 $$
 
 $$
-\begin{aligned}s^3W(s)+5s^2W(s)+7sW(s)+3W(s)&=U(s)\\s^3W(s)&=-3W(s)-7sW(s)-5s^2W(s)+U(s)\\s^3W(s)&=-3X_1(s)-7X_2(s)-5X_3(s)+U(s)\tag{3}\end{aligned}
+\begin{aligned}
+
+s^3W(s)+5s^2W(s)+7sW(s)+3W(s)&=U(s)
+\\
+s^3W(s)&=-3W(s)-7sW(s)-5s^2W(s)+U(s)
+\\
+s^3W(s)&=-3X_1(s)-7X_2(s)-5X_3(s)+U(s)
+
+\end{aligned}
 $$
 
 $$
-\begin{aligned}Y(s)&=(2s+3)W(s)\\Y(s)&=3W(s)+2sW(s)\\Y(s)&=3X_1(s)+2X_2(s)\tag{4}\end{aligned}
+\begin{aligned}Y(s)&=(2s+3)W(s)\\Y(s)&=3W(s)+2sW(s)\\Y(s)&=3X_1(s)+2X_2(s)\end{aligned}
 $$
 
 No domínio do tempo, temos:
@@ -270,11 +273,11 @@ V=Ri,\qquad i=i_C=C\frac{dv}{dt}
 $$
 
 $$
-\begin{aligned}u(t)-x_1(t)-V_{R_1}&=0\\u(t)-x_1(t)-\dot x_1(t)&=0\\\boxed{\dot x_1(t)=-x_1(t)+u(t)}&\tag{I}\end{aligned}
+\begin{aligned}u(t)-x_1(t)-V_{R_1}&=0\\u(t)-x_1(t)-\dot x_1(t)&=0\\\boxed{\dot x_1(t)=-x_1(t)+u(t)}&\end{aligned}
 $$
 
 $$
-\begin{aligned}u(t)-x_2(t)-V_{R_2}&=0\\u(t)-x_2(t)-\dot x_2(t)&=0\\\boxed{\dot x_2(t)=-x_2(t)+u(t)}&\tag{II}\end{aligned}
+\begin{aligned}u(t)-x_2(t)-V_{R_2}&=0\\u(t)-x_2(t)-\dot x_2(t)&=0\\\boxed{\dot x_2(t)=-x_2(t)+u(t)}&\end{aligned}
 $$
 
 Representando na forma matricial, temos:
@@ -330,7 +333,7 @@ $$
 $$
 
 $$
-\begin{aligned}i(t)&=i_C(t)\\x_1(t)&=C\dot x_2(t)\\\boxed{\dot x_2(t)=\frac1C x_1(t)}&\tag{II}\end{aligned}
+\begin{aligned}i(t)&=i_C(t)\\x_1(t)&=C\dot x_2(t)\\\boxed{\dot x_2(t)=\frac1C x_1(t)}&\end{aligned}
 $$
 
 Na forma matricial:
@@ -448,8 +451,6 @@ $$
 &=\begin{bmatrix}-1-K_1-s&2-K_2\\-2&-1-s\end{bmatrix}\end{aligned}
 $$
 
-> Obs.: o manuscrito rotula as três primeiras linhas com $+sI$, embora as matrizes mostrem a subtração de $sI$.
-
 $$
 \begin{aligned}\Delta_{mf}&=\begin{vmatrix}-1-K_1-s&2-K_2\\-2&-1-s\end{vmatrix}\\
 &=(-1-K_1-s)(-1-s)-(-2)(2-K_2)\\
@@ -521,8 +522,6 @@ $$
 \begin{aligned}\dot x(t)&=Ax(t)+B(-Kx(t)+K_Iv)\\\dot x(t)&=Ax(t)-BKx(t)+BK_Iv\end{aligned}
 $$
 
-> Obs.: o último termo da segunda linha está abreviado como $B_Iv$ no manuscrito.
-
 $$
 \dot v=e=r(t)-y(t)\tag{V}
 $$
@@ -542,8 +541,6 @@ $$
 \underbrace{\begin{bmatrix}K&K_I\end{bmatrix}}_{\hat K}\begin{bmatrix}x\\v\end{bmatrix}+
 \begin{bmatrix}0\\1\end{bmatrix}r
 $$
-
-> Obs.: o sinal do ganho integral na expressão matricial difere do sinal apresentado na lei de controle anterior. Mantido conforme o manuscrito.
 
 **Teorema:** se o sistema representado pelo par $(A,B)$ for controlável, então o par $(\hat A,\hat B)$ também é controlável.
 
@@ -654,8 +651,6 @@ $$
 s^3+(K_2+2)s^2+(K_2+2K_1-K_I-3)s-K_I
 $$
 
-> Obs.: na última linha do manuscrito, as potências $s^2$ e $s$ foram omitidas; aqui foram explicitadas de acordo com a linha anterior.
-
 Comparando com o polinômio desejado:
 
 $$
@@ -761,8 +756,6 @@ Tem por objetivo estimar os valores das variáveis de estado que não são medid
   <img src="assets/unidade-3/figura-08.svg" alt="Figura 8 — Observador de estado" />
 </p>
 
-> Obs.: no desenho do caderno, a derivação da entrada para o observador aparece após o primeiro bloco $B$; aqui ambos os blocos recebem $u(t)$, conforme as equações.
-
 **Sistema:**
 
 $$
@@ -817,8 +810,6 @@ $$
 \dot e(t)&=e(A-LC)
 \end{aligned}
 $$
-
-> Obs.: na primeira linha do desenvolvimento do erro, o manuscrito não coloca os pontos de derivação em $x$ e $\hat x$; foram explicitados de acordo com a equação anterior. Na última linha, para vetor-coluna, a forma matricial é $(A-LC)e(t)$.
 
 Autovalores de $A-LC$:
 

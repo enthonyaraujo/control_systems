@@ -23,8 +23,6 @@ Análise para escolher o controlador:
 
 1. Estabilidade.
 
-Anotação lateral: modelagem — pêndulo invertido; $G(s)$ — C1; controlador — C2 [parte final de leitura incerta].
-
 Projetar um controlador significa modificar a resposta de um sistema de modo que sua saída atenda a determinadas especificações:
 
 1. Estabilidade.
@@ -811,8 +809,6 @@ $$
 z=-\frac1{\tau_d}\Rightarrow\boxed{\tau_d=-0{,}06}
 $$
 
-> O sinal negativo consta nessa primeira linha do manuscrito; as expressões seguintes utilizam $+0{,}06s$.
-
 Utilizando a condição de módulo, temos:
 
 $$
@@ -1066,9 +1062,6 @@ Aplicando a tangente em ambos os lados:
 $$
 \frac{1{,}2}{z-2}=81{,}1
 $$
-
-[O caderno registra 81,1 nesta linha, mas utiliza 6,38 no cálculo seguinte.]
-
 $$
 \boxed{z=\frac{1{,}2+2\times6{,}38}{6{,}38}=2{,}18}
 $$
@@ -1243,8 +1236,6 @@ $$
 $$
 K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad\tau_i=R_1C_2,\qquad\tau_d=R_2C_1
 $$
-
-> Obs.: índices e constantes de tempo de leitura incerta no caderno.
 
 ### Exemplo de projeto PID com cancelamento de polo e zero
 
@@ -1580,5 +1571,3 @@ $$
 $$
 K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad\tau_i=R_1C_1,\qquad\tau_d=R_2C_1
 $$
-
-> Obs.: $\tau_i=R_1C_1$ é a leitura incerta do quadro; na expressão anterior aparece $C_2$ no denominador.
