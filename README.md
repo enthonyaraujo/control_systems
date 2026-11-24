@@ -32,7 +32,7 @@ O material reúne conceitos teóricos, demonstrações matemáticas, exemplos re
 
 Os arquivos em `obsidian/` são a fonte principal das anotações. O script [`render_tikz.py`](scripts/render_tikz.py) compila os blocos TikZ em SVG e gera as versões de leitura para o GitHub.
 
-**Requisitos:** Python 3.10 ou superior, TeX Live (LaTeX, TikZ, PGFPlots e standalone) e Poppler (`pdftocairo`).
+**Requisitos:** Python 3.10 ou superior, TeX Live (LaTeX, lmodern, TikZ, PGFPlots e standalone) e Poppler (`pdftocairo`).
 
 Para gerar todas as unidades localmente:
 
