@@ -36,24 +36,25 @@
 \end{document}
 ```
 
-- Controlador $G_c$: um dispositivo físico que, inserido no sistema, visa à modificação de sua dinâmica, alterando a relação entre $R(s)$ e $Y(s)$ por meio da atuação de seus parâmetros.
+- Controlador $G_c(s)$: dispositivo físico ou algoritmo que modifica a dinâmica da malha fechada pela atuação de seus parâmetros.
 
-**Exemplo:** motor elétrico CC.
-
-FT:
-
-1. $E_a/\theta$ → sensor → encoder.
-2. $E_a/\omega$ → sensor → encoder.
-
-Análise para escolher o controlador:
-
-1. Estabilidade.
+**Exemplo:** motor elétrico CC. As funções de transferência usuais são $\Theta(s)/E_a(s)$ (posição angular) e $\Omega(s)/E_a(s)$ (velocidade angular). Um encoder pode medir posição e permitir estimar velocidade.
 
 Projetar um controlador significa modificar a resposta de um sistema de modo que sua saída atenda a determinadas especificações:
 
-1. Estabilidade.
-2. Desempenho: baixo sobressinal ($M_p\%$) e pequeno tempo de resposta transitória ($t_s$, 2% ou 5%).
+1. Estabilidade interna da malha fechada.
+2. Desempenho: sobressinal ($M_p$), tempo de acomodação ($t_s$, faixa de 2% ou 5%) e tempo de subida.
 3. Erro em regime permanente.
+
+**Convenções adotadas nesta unidade:** sistemas LTI contínuos, condições iniciais nulas, realimentação negativa unitária nos exercícios, salvo indicação contrária. Em série, $L(s)=G_c(s)G(s)$, $T(s)=L(s)/(1+L(s))$ e $E(s)=R(s)/(1+L(s))$. O teorema do valor final só é aplicável quando os polos de $sE(s)$ estão no semiplano esquerdo aberto. Para um degrau, $M_p$ e a faixa de acomodação são medidos em relação ao valor final da saída.
+
+Para uma resposta padrão de segunda ordem subamortecida sem zeros:
+
+$$M_p(\%)=100e^{-\pi\zeta/\sqrt{1-\zeta^2}},\qquad t_s(2\%)\approx\frac{4}{\zeta\omega_n},\qquad t_s(5\%)\approx\frac{3}{\zeta\omega_n}$$
+
+$$\zeta=\frac{-\ln(M_p/100)}{\sqrt{\pi^2+\ln^2(M_p/100)}}$$
+
+Esses tempos são aproximações; para sistemas de ordem superior ou com zeros relevantes, a localização dos polos não garante o desempenho temporal. Deve-se verificar a resposta completa. Nos exercícios revisados, as verificações numéricas utilizam o modelo contínuo ideal, sem saturação.
 
 **Em série:**
 
@@ -97,11 +98,11 @@ Projetar um controlador significa modificar a resposta de um sistema de modo que
 
 ## Controlador por avanço de fase
 
-A compensação por avanço de fase visa aumentar a margem de fase, reduzindo, por conseguinte, o sobressinal da resposta transitória.
+A compensação por avanço de fase introduz fase positiva, podendo aumentar a margem de fase, melhorar o amortecimento e acelerar a resposta. A redução do sobressinal não é garantida sem verificar a malha fechada.
 
 O controlador por avanço de fase é dado pela seguinte FT:
 
-$$G_c(s)=K\frac{s+z}{s+p},\qquad z<p$$
+$$G_c(s)=K\frac{s+z}{s+p},\qquad K>0,\quad 0<z<p$$
 
 ```tikz
 \begin{document}
@@ -155,17 +156,17 @@ $$G_c(s)=K\frac{s+z}{s+p},\qquad z<p$$
 
 1º estágio:
 
-$$\frac{V_{saída}}{V_{entrada}}=-\frac{Z_2}{Z_1}$$
+$$\frac{V_{\text{saída}}}{V_{\text{entrada}}}=-\frac{Z_2}{Z_1}$$
 
 2º estágio:
 
-$$\frac{V_{saída}}{V_{entrada}}=-\frac{R}{R}=-1$$
+$$\frac{V_{\text{saída}}}{V_{\text{entrada}}}=-\frac{R}{R}=-1$$
 
 $$Z_1=\frac{R_1\frac{1}{sC_1}}{R_1+\frac{1}{sC_1}}=\frac{R_1}{sC_1}\frac{sC_1}{1+sR_1C_1}=\frac{R_1}{sR_1C_1+1}$$
 
 $$Z_2=\frac{R_2}{sR_2C_2+1}$$
 
-$$\frac{V_{saída}}{V_{entrada}}=-\frac{\frac{R_2}{sR_2C_2+1}}{\frac{R_1}{sR_1C_1+1}}=-\frac{R_2}{sR_2C_2+1}\frac{sR_1C_1+1}{R_1}$$
+$$\frac{V_{\text{saída}}}{V_{\text{entrada}}}=-\frac{\frac{R_2}{sR_2C_2+1}}{\frac{R_1}{sR_1C_1+1}}=-\frac{R_2}{sR_2C_2+1}\frac{sR_1C_1+1}{R_1}$$
 
 $$=-\frac{sR_1R_2C_1+R_2}{sR_1R_2C_2+R_1}$$
 
@@ -178,6 +179,8 @@ $$\frac{V_{out}}{V_{in}}=\frac{R_2}{R_1}\left(\frac{R_1C_1(s+1/R_1C_1)}{R_2C_2(s
 $$\frac{V_{out}}{V_{in}}=\frac{C_1}{C_2}\left(\frac{s+\frac{1}{R_1C_1}}{s+\frac{1}{R_2C_2}}\right)$$
 
 $$K=\frac{C_1}{C_2},\qquad z=\frac{1}{R_1C_1},\qquad p=\frac{1}{R_2C_2}$$
+
+Para avanço, $R_1C_1>R_2C_2$. A análise supõe amplificadores operacionais ideais.
 
 ### Exemplo: servomecanismo composto por um motor de corrente contínua
 
@@ -197,31 +200,31 @@ $$\boxed{T(s)=\frac{\omega_n^2}{s^2+2\zeta\omega_ns+\omega_n^2}}$$
 
 Comparando as duas equações:
 
-$$\omega_n^2=5\Rightarrow\omega_n=5$$
+$$\omega_n^2=5\Rightarrow\boxed{\omega_n=\sqrt5\ \mathrm{rad/s}}$$
 
-(frequência não amortecida).
-
-> Obs.: na expressão acima, $\omega_n=\sqrt5$; o caderno registra $5$.
+(frequência natural não amortecida).
 
 $$2\zeta\omega_n=1\Rightarrow\zeta=\frac{1}{2\sqrt5}$$
 
-(coeficiente de amortecimento).
+(razão de amortecimento, adimensional).
 
 Segundo o critério de 2%:
 
-$$t_s=\frac{4}{\zeta\omega_n}=\frac{4}{1/2}=8\ \text{segundos}$$
+$$t_s\approx\frac{4}{\zeta\omega_n}=\frac{4}{1/2}=8\ \text{segundos}$$
 
 **Erro em regime permanente:**
 
 $$e(\infty)=\lim_{s\to0}sE(s)=\lim_{s\to0}s\left(\frac{1}{1+G(s)}\right)R(s)$$
 
-$$=\lim_{s\to0}s\left(\frac{1}{1+\frac{5}{0}}\right)\frac1s=0$$
+$$e(\infty)=\lim_{s\to0}\frac{s(s+1)}{s(s+1)+5}=0$$
 
 O percentual de overshoot:
 
 $$M_p(\%)=\left[e^{-\zeta\pi/\sqrt{1-\zeta^2}}\right]\times100$$
 
-$$M_p=48{,}6\%,\quad T_p=1{,}44\ \text{segundos},\quad T_r=0{,}82\ \text{segundos}$$
+$$M_p=48{,}6\%,\quad T_p=\frac{\pi}{\omega_d}\approx1{,}44\ \text{s},\quad T_r=\frac{\pi-\arccos\zeta}{\omega_d}\approx0{,}82\ \text{s}$$
+
+Aqui $T_r$ é o tempo de subida de 0% a 100% na primeira passagem; $t_s$ real (2%) é aproximadamente 7,56 s. O gráfico marca a estimativa de 8 s.
 
 ```tikz
 \begin{document}
@@ -253,9 +256,11 @@ Projetando um controlador por avanço de fase com os seguintes critérios:
 
 Considerando um sistema em malha com controlador, o tempo de acomodação será:
 
-$$t_s=\frac{4}{\zeta\omega_n}\Rightarrow\zeta\omega_n=\frac42=2$$
+$$t_s\approx\frac{4}{\zeta\omega_n}\Rightarrow\zeta\omega_n=\frac42=2$$
 
-$$\omega_n=\frac{2}{0{,}5}=4\ \text{rad/s}$$
+Para $M_p=16\%$, $\zeta\approx0{,}504$, arredondado para $0{,}5$ no projeto geométrico original:
+
+$$\omega_n\approx\frac{2}{0{,}5}=4\ \text{rad/s}$$
 
 Os polos dominantes do sistema do controlador são dados por:
 
@@ -269,8 +274,8 @@ $$\boxed{s=-2\pm2\sqrt3\,j}$$
 
 **Lugar geométrico das raízes (LGR):**
 
-1. Condição de fase: $\angle G_{ma}(s)=\pm$ múltiplo de $180^\circ$.
-2. Condição de módulo: $|G_{ma}(s)|=1$.
+1. Condição de fase: $\angle G_{ma}(s)=(2k+1)180^\circ$, $k\in\mathbb Z$, para ganho real positivo.
+2. Condição de módulo: $|G_{ma}(s)|=1$. Se $G_{ma}(s)=KF(s)$, então $K=1/|F(s)|$.
 
 Controlador por avanço de fase:
 
@@ -282,7 +287,7 @@ $$G_{ma}=G(s)G_c(s)$$
 
 $$G_{ma}=\frac{K(s+z)}{s+p}\frac{5}{s(s+1)}=\frac{5K(s+z)}{s(s+1)(s+p)}$$
 
-O LGR é dado por:
+Escolhe-se o zero em $-z=-2$. O diagrama a seguir mostra os vetores de fase no polo desejado (não o traçado completo do LGR):
 
 ```tikz
 \begin{document}
@@ -308,43 +313,33 @@ O LGR é dado por:
 \end{document}
 ```
 
-$$\angle(s+z)-\angle s-\angle(s+1)-\angle(s+p)=\pm180^\circ$$
+$$\angle(s+z)-\angle s-\angle(s+1)-\angle(s+p)\equiv180^\circ\pmod{360^\circ}$$
 
-$$\angle(s+p)=\angle(s+z)-\angle s-\angle(s+1)\pm180^\circ$$
+$$\theta_z=90^\circ,\quad\theta_{p0}=120^\circ,\quad\theta_{p1}=180^\circ-\arctan(2\sqrt3)\approx106{,}10^\circ$$
 
-$$\theta_z=90^\circ$$
+$$\theta_p=90^\circ-120^\circ-106{,}10^\circ+180^\circ\approx43{,}90^\circ$$
 
-$$\theta_{p0}=180^\circ-\arctan\left(\frac{2\sqrt3}{2}\right)=120^\circ$$
+$$\arctan\left(\frac{2\sqrt3}{p-2}\right)=\theta_p\Rightarrow\boxed{p=5{,}6}$$
 
-$$\theta_{p1}=180^\circ-\arctan\left(\frac{2\sqrt3}{1}\right)=106{,}1^\circ$$
+Utilizando a condição de módulo:
 
-$$\theta_p=\arctan\left(\frac{2\sqrt3}{p-2}\right)$$
+$$K=\left.\frac{|s|\,|s+1|\,|s+5{,}6|}{5|s+2|}\right|_{s=-2+2\sqrt3j}=4{,}16$$
 
-$$\arctan\left(\frac{2\sqrt3}{p-2}\right)=90-120-106+180$$
+$$\boxed{G_c(s)=4{,}16\frac{s+2}{s+5{,}6}}$$
 
-$$\frac{2\sqrt3}{p-2}=0{,}96$$
+Verificação pela equação característica:
 
-$$2\sqrt3=0{,}96p-2\times0{,}96$$
+$$\Delta(s)=s(s+1)(s+5{,}6)+20{,}8(s+2)=(s+2{,}6)(s^2+4s+16)$$
 
-$$p=\frac{2\sqrt3+2\times0{,}96}{0{,}96}\Rightarrow\boxed{p=5{,}6}$$
+O par desejado é obtido, mas o terceiro polo em $-2{,}6$ não está suficientemente afastado e o zero também influencia a resposta. A resposta completa ao degrau apresenta $M_p\approx27{,}4\%$, $t_s(2\%)\approx2{,}05\,\mathrm{s}$ e erro final nulo. Portanto, o projeto original **não atende** ao sobressinal de 16%.
 
-$$G_{ma}=\frac{5K(s+2)}{s(s+1)(s+5{,}6)}$$
-
-Utilizando a condição do módulo:
-
-$$\left.\left|\frac{5K(s+2)}{s(s+1)(s+5{,}6)}\right|\right|_{s=-2+2\sqrt3j}=1$$
-
-$$K=\frac{|-2+2\sqrt3j|\,|-1+2\sqrt3j|\,|3{,}6+2\sqrt3j|}{5|2\sqrt3j|}$$
-
-$$K=\frac{4\times3{,}6\times5}{5\times3{,}46}\Rightarrow\boxed{K\approx4{,}2}$$
-
-$$\boxed{G_c(s)=4{,}2\left(\frac{s+2}{s+5{,}6}\right)}$$
+**Alternativa revisada (se as metas forem limites máximos):** por ajuste numérico dos parâmetros mantendo a estrutura de avanço, $G_c(s)=26\,(s+2{,}8)/(s+56)$. A validação temporal é apresentada ao final da unidade. Se forem exigidas igualdades exatas, será necessário ajustar especificamente essas metas, em vez de interpretar os valores como limites.
 
 ## Controlador por atraso de fase
 
-O controlador por avanço de fase (sic) é indicado quando a resposta transitória é satisfatória, porém o erro em regime permanente precisa ser melhorado. O controlador por atraso de fase é dado pela seguinte FT:
+O controlador por atraso de fase é indicado quando se deseja melhorar o erro em regime permanente com pequena alteração da dinâmica na faixa dos polos originalmente dominantes. Pode introduzir uma cauda lenta na resposta.
 
-$$\boxed{G_c(s)=K\frac{s+z}{s+p},\qquad z>p}$$
+$$\boxed{G_c(s)=K\frac{s+z}{s+p},\qquad K>0,\quad 0<p<z}$$
 
 Representado no plano complexo $s$, temos:
 
@@ -402,14 +397,14 @@ Representado no plano complexo $s$, temos:
 
 A função de transferência do circuito é dada por:
 
-$$\frac{V_{out}}{V_{in}}=\frac{C_1}{C_2}\left(\frac{s+1/R_1C_1}{s+1/R_2C_2}\right)$$
+$$\frac{V_{out}}{V_{in}}=\frac{C_1}{C_2}\left(\frac{s+1/(R_1C_1)}{s+1/(R_2C_2)}\right)$$
 
-$$K=\frac{C_1}{C_2};\qquad z=\frac{1}{R_1C_1};\qquad p=\frac{1}{R_2C_2}$$
+$$K=\frac{C_1}{C_2},\qquad z=\frac{1}{R_1C_1},\qquad p=\frac{1}{R_2C_2}$$
 
-- $R_1C_1>R_2C_2$: controlador por atraso de fase (PI).
-- $R_1C_1<R_2C_2$: controlador por avanço de fase (PD).
+- $R_1C_1<R_2C_2$: controlador por **atraso** de fase ($z>p$).
+- $R_1C_1>R_2C_2$: controlador por **avanço** de fase ($z<p$).
 
-> Obs.: as desigualdades acima estão invertidas em relação a $z>p$ para atraso e $z<p$ para avanço.
+Atraso e avanço não são idênticos a PI e PD: ambos possuem polo e zero finitos; PI tem polo na origem e PD ideal não possui polo finito.
 
 ### Exemplo: redução do erro em regime permanente
 
@@ -452,7 +447,7 @@ $$e(\infty)=\lim_{s\to0}s\left(\frac{1}{1+\frac{K(s+z)}{(s+p)(s+0{,}5)(s+2)}}\ri
 
 $$e(\infty)=\frac{1}{1+\frac{Kz}{p}}$$
 
-Para que a resposta transitória não seja afetada, temos que $K=1$:
+Escolhe-se $K=1$ para manter o ganho aproximadamente unitário em frequências muito superiores a $p$ e $z$. Isso não garante que a resposta transitória permaneça inalterada:
 
 $$e(\infty)=\frac{1}{1+\frac zp}$$
 
@@ -472,7 +467,9 @@ Como o zero deve ser localizado próximo da origem, considerando $p=0{,}01$, tem
 
 $$z=19\times0{,}01=0{,}19$$
 
-$$G_c=\frac{1(s+0{,}19)}{s+0{,}01}$$
+$$G_c(s)=\frac{s+0{,}19}{s+0{,}01}$$
+
+A malha fechada é estável (polos aproximadamente $-0{,}114$ e $-1{,}198\pm0{,}563j$), e o erro é de 5%. Porém, surge uma cauda lenta: $t_s(2\%)\approx27{,}6\,\mathrm{s}$. Logo, a redução do erro é atendida, mas a preservação da resposta transitória completa não está demonstrada. Deslocar o par polo-zero para mais perto da origem preserva melhor a dinâmica rápida, mas pode tornar a cauda ainda mais lenta. A especificação de resposta transitória precisa de uma tolerância quantitativa.
 
 ## Controlador proporcional (P)
 
@@ -502,8 +499,7 @@ $$e(\infty)=\lim_{s\to0}s\left(\frac{1}{1+\frac{K_p}{(s+1)(s+5)}}\right)\frac1s$
 
 $$\boxed{e(\infty)=\frac5{5+K_p}}$$
 
-- $K_p$ pequeno: o erro é "grande".
-- $K_p$ grande: o erro é "pequeno".
+- Para esta planta e $K_p>0$, aumentar $K_p$ reduz o erro final, mas pode aumentar o sobressinal. Em geral, deve-se verificar estabilidade e desempenho antes de aumentar o ganho.
 
 **Implementação analógica:** o circuito de implementação de um controlador proporcional é dado por:
 
@@ -575,7 +571,7 @@ Com controlador proporcional:
 
 1. Tempo de acomodação:
 
-$$t_s=\frac4{\zeta\omega_n}\Rightarrow\zeta\omega_n=0{,}4$$
+$$t_s\approx\frac4{\zeta\omega_n}\Rightarrow\zeta\omega_n=0{,}4$$
 
 $$\omega_n=\frac{0{,}4}{0{,}591}=0{,}67\ \text{rad/s}$$
 
@@ -595,15 +591,17 @@ $$s(s+1)(s+2)+K_p=0$$
 
 $$K_p=-s(s+1)(s+2)$$
 
-No ponto $s=-0{,}4+0{,}55j$:
+No ponto aproximado $s=-0{,}4+0{,}55j$, a avaliação fornece:
 
-$$|K_p|=|-s(s+1)(s+2)|$$
+$$-s(s+1)(s+2)\approx0{,}9285+0{,}122375j$$
 
-$$K_p=\left.|s|\,|s+1|\,|s+2|\right|_{s=-0{,}4+0{,}55j}$$
+Como o resultado não é real, o ponto não pertence ao LGR para ganho positivo. Não se pode usar apenas o módulo para calcular $K_p$. O valor do caderno, $K_p\approx0{,}93$, produz sobressinal real de aproximadamente 12,4%, acima do limite.
 
-$$K_p=\sqrt{0{,}4^2+0{,}55^2}\sqrt{0{,}6^2+0{,}55^2}\sqrt{1{,}6^2+0{,}55^2}$$
+**Solução revisada:** escolhendo um ponto efetivo do LGR por ajuste do ganho, $\boxed{K_p=0{,}5}$. A malha fechada é
 
-$$\boxed{K_p=0{,}93}$$
+$$T(s)=\frac{0{,}5}{s^3+3s^2+2s+0{,}5}$$
+
+Os polos são $-2{,}1915$ e $-0{,}4043\pm0{,}2544j$. A simulação ao degrau fornece $M_p\approx0{,}66\%$ e $t_s(2\%)\approx9{,}23\,\mathrm{s}$: ambos os limites são atendidos.
 
 ### Exemplo adicional
 
@@ -676,7 +674,9 @@ $$K_p=|-2+4{,}05j|\,|2+4{,}05j|$$
 
 $$K_p=\sqrt{2^2+4{,}05^2}\sqrt{2^2+4{,}05^2}$$
 
-$$K_p=20{,}4$$
+$$\boxed{K_p\approx20{,}4}$$
+
+A malha fechada possui polos $-3\pm4{,}05j$, $M_p\approx9{,}76\%$ e $t_s(2\%)\approx1{,}18\,\mathrm{s}$, medidos em relação ao valor final $20{,}4/25{,}4\approx0{,}803$. Ambas as especificações transitórias são satisfeitas; o erro final não é nulo.
 
 ## Controlador proporcional e derivativo (PD)
 
@@ -691,7 +691,9 @@ A função de transferência do controlador PD é dada por:
 
 $$U(s)=K_p(1+\tau_ds)E(s)$$
 
-$$U(s)=(K_p+K_ds)E(s)$$
+$$U(s)=(K_p+K_ds)E(s),\qquad K_d=K_p\tau_d$$
+
+O PD ideal é impróprio; em aplicações físicas, limita-se a ação derivativa com um filtro, por exemplo $K_ds/(1+T_fs)$, $T_f>0$.
 
 Zero: $s=-1/\tau_d$.
 
@@ -772,9 +774,9 @@ Projete um controlador PD de modo que o sistema tenha:
 2. Tempo de acomodação $t_s(2\%)=1\,s$.
 3. Máximo sobressinal $M_p(\%)=25\%$ ($\zeta=0{,}4$).
 
-**Solução:** polos dominantes.
+**Solução:** polos desejados pelo modelo padrão de segunda ordem. Para 25%, $\zeta\approx0{,}404$; mantém-se o arredondamento $0{,}4$ das anotações.
 
-$$t_s=\frac4{\zeta\omega_n}\Rightarrow\omega_n=\frac4{\zeta t_s}=\frac4{0{,}4\times1}\Rightarrow\boxed{\omega_n=10}$$
+$$t_s\approx\frac4{\zeta\omega_n}\Rightarrow\omega_n\approx\frac4{0{,}4\times1}=10\ \mathrm{rad/s}$$
 
 $$s=-4\pm10\sqrt{1-0{,}4^2}\,j$$
 
@@ -819,13 +821,13 @@ Com a inserção do controlador:
 \node[above right,font=\scriptsize,fill=white,inner sep=1pt] at (-4,9.16) {$ -4+j9{,}16 $};
 \draw[red!75!black] (-2,0) -- (-4,9.16);
 \draw[red!75!black] (0,0) -- (-4,9.16);
-\draw[teal!70!black] (-16.72,0) -- (-4,9.16);
+\draw[teal!70!black] (-16.6667,0) -- (-4,9.16);
 \draw[red!75!black,thick] (-2,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-2,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-2,0) {$ -2 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0 $};
-\draw[teal!70!black,thick,fill=white] (-16.72,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-16.72,0) {$ -z $};
+\draw[teal!70!black,thick,fill=white] (-16.6667,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-16.6667,0) {$ -z $};
 \end{tikzpicture}
 \end{document}
 ```
@@ -838,19 +840,11 @@ $$\theta_z=\tan^{-1}\left(\frac{9{,}16}{z-4}\right)$$
 
 Utilizando a condição de fase, temos:
 
-$$\theta_z=(\theta_0+\theta_1)+180^\circ$$
+$$\theta_z\equiv\theta_0+\theta_1+180^\circ\pmod{360^\circ}$$
 
-$$\tan^{-1}\left(\frac{9{,}16}{z-4}\right)=113{,}59+102{,}31+180$$
+$$\theta_z\approx35{,}9^\circ\Rightarrow z=4+\frac{\sqrt{84}}{\tan\theta_z}\approx16{,}67$$
 
-$$\tan^{-1}\left(\frac{9{,}16}{z-4}\right)=395{,}9-360$$
-
-$$\frac{9{,}16}{z-4}=\tan(35{,}9^\circ)=0{,}72$$
-
-$$z=\frac{9{,}16+4\times0{,}72}{0{,}72}$$
-
-$$\boxed{z=16{,}72}$$
-
-$$z=-\frac1{\tau_d}\Rightarrow\boxed{\tau_d=-0{,}06}$$
+$$\boxed{\tau_d=\frac1z=0{,}06\ \mathrm{s}}$$
 
 Utilizando a condição de módulo, temos:
 
@@ -862,11 +856,13 @@ $$\left.\left|\frac{40K_p(1+0{,}06s)}{s(s+2)}\right|\right|_{s=-4+9{,}16j}=1$$
 
 $$K_p=\left.\frac{|s|\,|s+2|}{40|1+0{,}06s|}\right|_{s=-4+9{,}16j}$$
 
-$$|s|=9{,}96,\qquad |s+2|=9{,}37,\qquad |1+0{,}06s|=0{,}94$$
+$$K_p=\frac{10\sqrt{88}}{40|1+0{,}06(-4+j\sqrt{84})|}=2{,}5$$
 
-$$K_p=\frac{10\times9{,}37}{40\times0{,}94}$$
+$$\boxed{G_c(s)=2{,}5+0{,}15s}$$
 
-$$\boxed{K_p=2{,}5}$$
+Verificação: $T(s)=(6s+100)/(s^2+8s+100)$, com os polos desejados. O zero altera a resposta: $M_p\approx31{,}3\%$ e $t_s(2\%)\approx0{,}97\,\mathrm{s}$. O erro ao degrau é nulo, porém o sobressinal excede 25%.
+
+**Alternativa revisada para limites máximos:** $G_c(s)=1+0{,}28s$, obtida por ajuste da resposta completa, com desempenho indicado na tabela final.
 
 ### Exemplo adicional
 
@@ -882,57 +878,43 @@ $$s=-0{,}456\times5\pm5\sqrt{1-(0{,}456)^2}\,j$$
 
 $$s=-2{,}3\pm4{,}45j$$
 
-O LGR do sistema:
+Diagrama dos vetores de fase no polo desejado:
 
 ```tikz
 \begin{document}
 \begin{tikzpicture}[x=0.952cm,y=0.952cm]
 \draw[->] (-7,0) -- (1,0) node[right] {$\mathrm{Re}$};
 \draw[->] (0,-0.9) -- (0,5.4) node[above] {$\mathrm{Im}$};
-\draw[dashed,gray] (-2.3,0) -- (-2.3,4.45) -- (0,4.45);
-\fill[blue!70!black] (-2.3,4.45) circle (2pt) node[above left] {$ s_d $};
-\node[above right,font=\scriptsize,fill=white,inner sep=1pt] at (-2.3,4.45) {$ -2{,}3+j4{,}45 $};
-\draw[red!75!black] (-6,0) -- (-2.3,4.45);
-\draw[red!75!black] (-4,0) -- (-2.3,4.45);
-\draw[red!75!black] (0,0) -- (-2.3,4.45);
-\draw[teal!70!black] (-5.2,0) -- (-2.3,4.45);
+\draw[dashed,gray] (-2.28,0) -- (-2.28,4.45) -- (0,4.45);
+\fill[blue!70!black] (-2.28,4.45) circle (2pt) node[above left] {$ s_d $};
+\node[above right,font=\scriptsize,fill=white,inner sep=1pt] at (-2.28,4.45) {$ -2{,}28+j4{,}45 $};
+\draw[red!75!black] (-6,0) -- (-2.28,4.45);
+\draw[red!75!black] (-4,0) -- (-2.28,4.45);
+\draw[red!75!black] (0,0) -- (-2.28,4.45);
+\draw[teal!70!black] (-5.2700,0) -- (-2.28,4.45);
 \draw[red!75!black,thick] (-6,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-6,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-6,0) {$ -6 $};
 \draw[red!75!black,thick] (-4,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-4,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-4,0) {$ -4 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0 $};
-\draw[teal!70!black,thick,fill=white] (-5.2,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-5.2,0) {$ -z $};
+\draw[teal!70!black,thick,fill=white] (-5.2700,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-5.2700,0) {$ -z $};
 \end{tikzpicture}
 \end{document}
 ```
 
-$$\theta_z=(\theta_0+\theta_1+\theta_2)+180^\circ$$
+Com os valores não arredondados, $s_d=-2{,}28+j4{,}4499$. Pela condição de fase, $\theta_z\equiv\angle s_d+\angle(s_d+4)+\angle(s_d+6)+180^\circ\pmod{360^\circ}$.
 
-$$\tan^{-1}\left(\frac{4{,}45}{z-2{,}3}\right)=\left(180^\circ-\tan^{-1}\frac{4{,}45}{2{,}3}\right)+\tan^{-1}\frac{4{,}45}{1{,}7}+\tan^{-1}\frac{4{,}45}{3{,}7}+180^\circ$$
+A condição de módulo fornece $K_p=|s_d(s_d+4)(s_d+6)|/|1+s_d\tau_d|$. Uma conferência exata por comparação de coeficientes evita propagar arredondamentos:
 
-$$\tan^{-1}\left(\frac{4{,}45}{z-2{,}3}\right)=117{,}33+69{,}09+50{,}25+180^\circ$$
+$$\Delta(s)=s^3+10s^2+(24+K_d)s+K_p=(s+5{,}44)(s^2+4{,}56s+25)$$
 
-$$\tan^{-1}\left(\frac{4{,}45}{z-2{,}3}\right)=56{,}67^\circ$$
+$$\boxed{K_p=136,\qquad K_d=25{,}8064}$$
 
-$$\frac{4{,}45}{z-2{,}3}=1{,}52$$
+$$\boxed{\tau_d=0{,}18975\ \mathrm{s},\qquad z=5{,}2700}$$
 
-$$z=\frac{4{,}45+2{,}3\times1{,}52}{1{,}52}$$
-
-$$\boxed{z=5{,}2}\qquad\boxed{\tau_d=0{,}19}$$
-
-Utilizando a condição de módulo, temos:
-
-$$|G_{ma}(s)|=1$$
-
-$$G_{ma}(s)=G_c(s)G(s)=\frac{K_p(1+0{,}19s)}{s(s+4)(s+6)}$$
-
-$$K_p=\left.\frac{|s|\,|s+4|\,|s+6|}{|1+0{,}19s|}\right|_{s=-2{,}3+4{,}45j}$$
-
-$$|s|=5,\quad |s+4|=4{,}76,\quad |s+6|=5{,}78,\quad |1+0{,}19s|=1{,}015$$
-
-$$K_p=\frac{5\times4{,}76\times5{,}78}{1{,}015}=135{,}53$$
+A malha fechada tem os polos desejados, além do polo $-5{,}44$. O diagrama é aproximado. As fórmulas de segunda ordem não determinam exatamente a resposta com esse zero.
 
 ## Controlador proporcional-integral (PI)
 
@@ -942,7 +924,7 @@ $$u(t)=K_p\left(e(t)+\frac1{\tau_i}\int_0^t e(\tau)\,d\tau\right)$$
 
 A função de transferência do controlador PI é dada por:
 
-$$U(s)=\frac{K_ps+K_i}{s}E(s)$$
+$$U(s)=\frac{K_ps+K_i}{s}E(s),\qquad K_i=\frac{K_p}{\tau_i}$$
 
 Baseado na equação acima, temos um polo na origem ($s=0$) e zero ($s=-1/\tau_i$).
 
@@ -1021,9 +1003,9 @@ Projete um controlador PI de modo que a resposta do sistema em malha fechada com
 
 1. Erro nulo em regime permanente.
 2. Tempo de acomodação $t_s(5\%)=1{,}5\,s$.
-3. Máximo sobressinal $M_p(\%)=0{,}63\%$ ($\zeta=0{,}857$).
+3. Máximo sobressinal $M_p(\%)=0{,}63\%$ (para o modelo padrão de segunda ordem, $\zeta\approx0{,}850$).
 
-**Solução:** tipo 0 e $R(s)=1/s$.
+**Solução:** planta tipo 0 e $R(s)=1/s$. Para preservar o diagrama e o método das anotações, o projeto geométrico a seguir utiliza o valor aproximado original $\zeta=0{,}857$ e os polos arredondados $-2\pm1{,}2j$. A validação do sobressinal real é feita separadamente.
 
 Polos dominantes:
 
@@ -1060,7 +1042,7 @@ $$s=-2\pm1{,}2j$$
 \end{document}
 ```
 
-**Com controlador PI:**
+**Com controlador PI:** o traçado original do LGR é aproximado; o zero refinado está em $-2{,}19355$.
 
 ```tikz
 \begin{document}
@@ -1082,8 +1064,8 @@ $$s=-2\pm1{,}2j$$
 \node[below=4pt,font=\scriptsize] at (-2,0) {$ -2 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0 $};
-\draw[teal!70!black,thick,fill=white] (-2.18,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-2.18,0) {$ -z $};
+\draw[teal!70!black,thick,fill=white] (-2.19355,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-2.19355,0) {$ -z $};
 \end{tikzpicture}
 \end{document}
 ```
@@ -1099,15 +1081,15 @@ $$s=-2\pm1{,}2j$$
 \draw[red!75!black] (-5,0) -- (-2,1.2);
 \draw[red!75!black] (-2,0) -- (-2,1.2);
 \draw[red!75!black] (0,0) -- (-2,1.2);
-\draw[teal!70!black] (-2.18,0) -- (-2,1.2);
+\draw[teal!70!black] (-2.19355,0) -- (-2,1.2);
 \draw[red!75!black,thick] (-5,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-5,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-5,0) {$ -5 $};
 \draw[red!75!black,thick] (-2,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-2,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-2,0) {$ -2 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0 $};
-\draw[teal!70!black,thick,fill=white] (-2.18,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-2.18,0) {$ -z $};
+\draw[teal!70!black,thick,fill=white] (-2.19355,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-2.19355,0) {$ -z $};
 \end{tikzpicture}
 \end{document}
 ```
@@ -1120,26 +1102,23 @@ $$\theta_2=\arctan\left(\frac{1{,}2}{3}\right)=21{,}8^\circ$$
 
 $$\theta_z=\tan^{-1}\left(\frac{1{,}2}{z-2}\right)$$
 
-$$\tan^{-1}\left(\frac{1{,}2}{z-2}\right)=(149{,}03+90+21{,}8)+180^\circ$$
+$$\theta_z\equiv149{,}03^\circ+90^\circ+21{,}8^\circ+180^\circ\pmod{360^\circ}$$
 
-$$\tan^{-1}\left(\frac{1{,}2}{z-2}\right)=81{,}1^\circ$$
-
-Aplicando a tangente em ambos os lados:
-
-$$\frac{1{,}2}{z-2}=81{,}1$$
-$$\boxed{z=\frac{1{,}2+2\times6{,}38}{6{,}38}=2{,}18}$$
+$$\theta_z\approx80{,}83^\circ,\qquad z=2+\frac{1{,}2}{\tan\theta_z}\approx2{,}194$$
 
 **Condição de módulo:**
 
-$$|G_{ma}(s)|=1$$
+$$K_p=\left.\frac{|s|\,|s+2|\,|s+5|}{10|s+z|}\right|_{s=-2+1{,}2j}=0{,}744$$
 
-$$G_{ma}(s)=\frac{10K_p(s+2{,}18)}{s(s+2)(s+5)}$$
+Conferindo pelo polinômio característico:
 
-$$\left|\frac{10K_p(s+2{,}18)}{s(s+2)(s+5)}\right|=1$$
+$$\Delta(s)=s^3+7s^2+(10+10K_p)s+10K_i=(s+3)(s^2+4s+5{,}44)$$
 
-$$K_p=\frac{|s|\,|s+2|\,|s+5|}{10|s+2{,}18|}$$
+$$\boxed{K_p=0{,}744,\qquad K_i=1{,}632,\qquad G_c(s)=0{,}744+\frac{1{,}632}{s}}$$
 
-$$\boxed{K_p=0{,}75}$$
+A resposta completa apresenta erro final nulo, $t_s(5\%)\approx1{,}33\,\mathrm{s}$ e $M_p\approx1{,}51\%$, superior a 0,63%. A aproximação de segunda ordem não é suficiente.
+
+**Alternativa revisada para limites máximos:** $G_c(s)=1{,}7+2{,}5/s$, obtida por ajuste numérico e verificada na tabela final.
 
 ### Exemplo com entrada rampa unitária
 
@@ -1151,7 +1130,9 @@ Considerando uma entrada do tipo rampa unitária, projete um controlador PI de m
 
 1. Erro nulo em regime permanente.
 2. Tempo de acomodação $t_s(5\%)=2\,s$.
-3. Máximo sobressinal $M_p\%=10\%$ ($\zeta=0{,}6$).
+3. Máximo sobressinal $M_p=10\%$ ($\zeta\approx0{,}6$).
+
+**Ressalva:** para rampa, a saída cresce indefinidamente; o sobressinal percentual e o tempo de acomodação usuais do degrau não estão definidos da mesma forma. A seguir preserva-se o projeto geométrico original como meta de polos, e verifica-se o erro de rastreamento. Se forem exigidas métricas de rampa, é preciso definir a banda e a grandeza de referência.
 
 **1. Polos dominantes**
 
@@ -1175,13 +1156,13 @@ $$s=-1{,}5\pm2j$$
 \node[above right,font=\scriptsize,fill=white,inner sep=1pt] at (-1.5,2) {$ -1{,}5+j2 $};
 \draw[red!75!black] (-4,0) -- (-1.5,2);
 \draw[red!75!black] (0,0) -- (-1.5,2);
-\draw[teal!70!black] (-0.67,0) -- (-1.5,2);
+\draw[teal!70!black] (-0.675676,0) -- (-1.5,2);
 \draw[red!75!black,thick] (-4,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-4,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-4,0) {$ -4 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0\ (\times 2) $};
-\draw[teal!70!black,thick,fill=white] (-0.67,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-0.67,0) {$ -z $};
+\draw[teal!70!black,thick,fill=white] (-0.675676,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-0.675676,0) {$ -z $};
 \end{tikzpicture}
 \end{document}
 ```
@@ -1194,21 +1175,19 @@ $$\theta_1=\tan^{-1}\left(\frac2{2{,}5}\right)=38{,}67^\circ$$
 
 $$\theta_z=180^\circ-\tan^{-1}\left(\frac2{1{,}5-z}\right)$$
 
-$$180^\circ-\tan^{-1}\left(\frac2{1{,}5-z}\right)=126{,}87\times2+38{,}67+180^\circ$$
+$$\theta_z\equiv2(126{,}87^\circ)+38{,}66^\circ+180^\circ\pmod{360^\circ}\approx112{,}40^\circ$$
 
-Aplicando a tangente em ambos os lados:
-
-$$180^\circ-\tan^{-1}\left(\frac2{1{,}5-z}\right)\Rightarrow\tan(112{,}41^\circ)$$
-
-$$0-\frac2{1{,}5-z}=-2{,}42$$
-
-$$z=\frac{2{,}42\times1{,}5-2}{2{,}42}=0{,}67$$
+$$z=1{,}5+\frac{2}{\tan\theta_z}\approx0{,}6757$$
 
 **Condição de módulo:**
 
-$$\left.\left|\frac{K_p(s+0{,}67)}{s^2(s+4)}\right|\right|_{s=-1{,}5+2j}=1$$
+$$K_p=\left.\frac{|s|^2|s+4|}{|s+z|}\right|_{s=-1{,}5+2j}=9{,}25$$
 
-$$K_p=\frac{|s^2|\,|s+4|}{|s+0{,}67|}\Rightarrow K_p\approx9{,}24$$
+Conferindo: $\Delta(s)=s^3+4s^2+K_ps+K_i=(s+1)(s^2+3s+6{,}25)$.
+
+$$\boxed{G_c(s)=9{,}25+\frac{6{,}25}{s}}$$
+
+O sistema é tipo 2, estável e possui erro final nulo para rampa unitária. Entretanto, o terceiro polo $-1$ está mais próximo do eixo imaginário que o par escolhido; portanto, o par não é dominante por localização. Se as especificações fossem de degrau, o projeto também não as atenderia ($M_p\approx33{,}4\%$, $t_s(5\%)\approx2{,}62\,\mathrm{s}$).
 
 ## Controlador PID
 
@@ -1220,13 +1199,14 @@ Aplicando Laplace, temos:
 
 $$G_c(s)=K_p\left(1+\frac1{\tau_is}+\tau_ds\right)$$
 
-$$G_c(s)=K_p+\frac{K_i}{s}+K_ds$$
+$$G_c(s)=K_p+\frac{K_i}{s}+K_ds,\qquad K_i=\frac{K_p}{\tau_i},\qquad K_d=K_p\tau_d$$
 
 $$G_c(s)=\frac{K_p\tau_i\tau_ds^2+K_p\tau_is+K_p}{\tau_is}$$
 
-- Dois zeros.
-- Um polo.
+- Dois zeros (contando multiplicidade, para ganhos não nulos).
+- Um polo na origem.
 
+O PID ideal é impróprio e a implementação prática exige filtragem da derivada; a integral pode exigir anti-windup quando há saturação.
 Considerando zeros reais e iguais, temos:
 
 $$s_{1,2}=\frac{-\tau_i\pm\sqrt{\tau_i^2-4\tau_i\tau_d}}{2\tau_i\tau_d}$$
@@ -1293,7 +1273,13 @@ $$=\frac1{sR_1C_2}+\frac{C_1}{C_2}+\frac{R_2}{R_1}+sR_2C_1$$
 
 $$=\frac{C_1}{C_2}+\frac{R_2}{R_1}+\frac1{sR_1C_2}+sR_2C_1$$
 
-$$K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad\tau_i=R_1C_2,\qquad\tau_d=R_2C_1$$
+$$K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad K_i=\frac1{R_1C_2},\qquad K_d=R_2C_1$$
+
+Na forma com constantes de tempo:
+
+$$\boxed{\tau_i=\frac{K_p}{K_i}=K_pR_1C_2=R_1C_1+R_2C_2}$$
+
+$$\boxed{\tau_d=\frac{K_d}{K_p}=\frac{R_2C_1}{C_1/C_2+R_2/R_1}}$$
 
 ### Exemplo de projeto PID com cancelamento de polo e zero
 
@@ -1308,15 +1294,13 @@ Projete um controlador PID de modo que a resposta ao degrau unitário tenha:
 
 **Solução:**
 
-$$G_c(s)=\frac{K_p(s+z_1)(s+z_2)}s$$
+$$G_c(s)=\frac{K_d(s+z_1)(s+z_2)}s$$
 
-Considerando o cancelamento polo/zero, temos polos em $-1$ e $+1$. Zero escolhido em $-1$ (mais afastado da origem no semiplano esquerdo).
+O ganho multiplicador é $K_d$ (coeficiente de $s$ do PID), não $K_p$. Escolhe-se o zero em $-1$ para cancelar apenas o polo estável. Nunca se deve cancelar o polo instável em $+1$ para tentar obter estabilidade interna.
 
-$$G_c(s)=\frac{K_p(s+1)(s+z_2)}s$$
+$$G_c(s)=\frac{K_d(s+1)(s+z_2)}s$$
 
-$$G_{ma}(s)=\frac{K_p(s+1)(s+z_2)}s\frac1{(s+1)(s-1)}$$
-
-$$G_{ma}(s)=\frac{K_p(s+z_2)}{s(s-1)}$$
+$$G_{ma}(s)=\frac{K_d(s+1)(s+z_2)}{s(s+1)(s-1)}=\frac{K_d(s+z_2)}{s(s-1)}$$
 
 **Condição de fase:**
 
@@ -1330,13 +1314,13 @@ $$G_{ma}(s)=\frac{K_p(s+z_2)}{s(s-1)}$$
 \node[above right,font=\scriptsize,fill=white,inner sep=1pt] at (-1,1.7320508075688772) {$ -1+j1{,}73 $};
 \draw[red!75!black] (0,0) -- (-1,1.7320508075688772);
 \draw[red!75!black] (1,0) -- (-1,1.7320508075688772);
-\draw[teal!70!black] (-1.33,0) -- (-1,1.7320508075688772);
+\draw[teal!70!black] (-1.333333,0) -- (-1,1.7320508075688772);
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0 $};
 \draw[red!75!black,thick] (1,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (1,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (1,0) {$ 1 $};
-\draw[teal!70!black,thick,fill=white] (-1.33,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-1.33,0) {$ -z_2 $};
+\draw[teal!70!black,thick,fill=white] (-1.333333,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-1.333333,0) {$ -z_2 $};
 \end{tikzpicture}
 \end{document}
 ```
@@ -1347,31 +1331,21 @@ $$\theta_1=180^\circ-\tan^{-1}\left(\frac{\sqrt3}{2}\right)$$
 
 Ângulos: $120^\circ$ e $139{,}1^\circ$, respectivamente.
 
-$$\theta_{-z_2}=180^\circ-\tan^{-1}\left(\frac{\sqrt3}{1-z_2}\right)=\theta_0+\theta_1+180^\circ$$
+$$\theta_{z_2}\equiv120^\circ+139{,}1^\circ+180^\circ\pmod{360^\circ}=79{,}1^\circ$$
 
-$$\theta_{-z_2}=180^\circ-\tan^{-1}\left(\frac{\sqrt3}{1-z_2}\right)=79{,}1^\circ$$
-
-Aplicando a tangente dos dois lados:
-
-$$0-\frac{\sqrt3}{1-z_2}=5{,}2\Rightarrow-\sqrt3=5{,}2-5{,}2z_2$$
-
-$$\frac{-\sqrt3-5{,}2}{-5{,}2}=z_2=1{,}33$$
+$$z_2=1+\frac{\sqrt3}{\tan\theta_{z_2}}\approx1{,}3333$$
 
 **Condição de módulo:**
 
-$$G_{ma}(s)=\frac{K_p(s+1{,}3)}{s(s-1)}$$
+$$K_d=\left.\frac{|s|\,|s-1|}{|s+z_2|}\right|_{s=-1+\sqrt3j}=3$$
 
-$$\left.\left|\frac{K_p(s+1{,}3)}{s(s-1)}\right|\right|_{s=-1+\sqrt3j}=1$$
+Verificação exata: $s(s-1)+K_d(s+z_2)=s^2+2s+4$, portanto $K_d=3$ e $z_2=4/3$.
 
-$$\left.\frac{K_p|s+1{,}3|}{|s|\,|s-1|}\right|_{s=-1+\sqrt3j}=1$$
+$$\boxed{G_c(s)=\frac{3(s+1)(s+4/3)}{s}=7+\frac4s+3s}$$
 
-$$K_p=\left.\frac{|s|\,|s-1|}{|s+1{,}3|}\right|_{s=-1+\sqrt3j}$$
+$$\boxed{K_p=7,\quad K_i=4,\quad K_d=3}$$
 
-$$K_p=\frac{|-1+\sqrt3j|\,|-2+\sqrt3j|}{|0{,}3+\sqrt3j|}$$
-
-$$K_p\approx3$$
-
-$$G_{ma}(s)=\frac{3(s+1{,}3)}{s(s-1)}$$
+A função de transferência reduzida é $T(s)=(3s+4)/(s^2+2s+4)$ e o erro final ao degrau é nulo. O polinômio interno completo contém ainda o modo estável $-1$, cancelado na transferência nominal. Esse cancelamento é sensível a incertezas e não justifica chamar o par de estritamente dominante em toda a dinâmica interna.
 
 ### Exemplo adicional de PID com zeros iguais
 
@@ -1386,7 +1360,7 @@ Considerando uma rampa unitária na entrada, projete um controlador PID de modo 
 
 **Solução:**
 
-$$G_c(s)=\frac{K_p(s+z)^2}s$$
+$$G_c(s)=\frac{K_d(s+z)^2}s$$
 
 Condição de fase:
 
@@ -1401,76 +1375,38 @@ Condição de fase:
 \draw[red!75!black] (-8,0) -- (-2,3.4641016151377544);
 \draw[red!75!black] (-4,0) -- (-2,3.4641016151377544);
 \draw[red!75!black] (0,0) -- (-2,3.4641016151377544);
-\draw[teal!70!black] (-2.92,0) -- (-2,3.4641016151377544);
+\draw[teal!70!black] (-2.928203,0) -- (-2,3.4641016151377544);
 \draw[red!75!black,thick] (-8,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-8,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-8,0) {$ -8 $};
 \draw[red!75!black,thick] (-4,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (-4,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (-4,0) {$ -4 $};
 \draw[red!75!black,thick] (0,0) ++(-3pt,-3pt) -- ++(6pt,6pt) (0,0) ++(-3pt,3pt) -- ++(6pt,-6pt);
 \node[below=4pt,font=\scriptsize] at (0,0) {$ 0\ (\times 2) $};
-\draw[teal!70!black,thick,fill=white] (-2.92,0) circle (3pt);
-\node[above left=3pt,font=\scriptsize] at (-2.92,0) {$ -z\ (\times 2) $};
+\draw[teal!70!black,thick,fill=white] (-2.928203,0) circle (3pt);
+\node[above left=3pt,font=\scriptsize] at (-2.928203,0) {$ -z\ (\times 2) $};
 \end{tikzpicture}
 \end{document}
 ```
 
-$$2\angle(s+z)=2\angle s+\angle(s+4)+\angle(s+8)+180^\circ$$
+$$2\angle(s+z)\equiv2\angle s+\angle(s+4)+\angle(s+8)+180^\circ\pmod{360^\circ}$$
 
-$$\theta_0=180^\circ-\tan^{-1}\left(\frac{2\sqrt3}{2}\right)=120^\circ$$
+$$\theta_0=120^\circ,\qquad\theta_{-4}=60^\circ,\qquad\theta_{-8}=30^\circ$$
 
-$$\theta_{-4}=\tan^{-1}\left(\frac{2\sqrt3}{2}\right)=60^\circ$$
+$$2\theta_z\equiv510^\circ\equiv150^\circ\pmod{360^\circ}$$
 
-$$\theta_{-8}=\tan^{-1}\left(\frac{2\sqrt3}{6}\right)=30^\circ$$
+Escolhendo $0<\theta_z<180^\circ$, segue $\theta_z=75^\circ$.
 
-$$2\left[180^\circ-\tan^{-1}\left(\frac{2\sqrt3}{2-z}\right)\right]=150^\circ$$
+$$\boxed{z=2+\frac{2\sqrt3}{\tan75^\circ}\approx2{,}9282}$$
 
-$$180^\circ-\tan^{-1}\left(\frac{2\sqrt3}{2-z}\right)=75^\circ$$
-
-Aplicando a tangente em ambos os lados:
-
-$$0-\frac{2\sqrt3}{2-z}=3{,}73$$
-
-$$-2\sqrt3=3{,}73(2-z)$$
-
-$$-2\sqrt3=7{,}46-3{,}73z$$
-
-$$z=2{,}92$$
+O cálculo do ganho e a conferência dos polos estão na continuação.
 
 ### PID com cancelamento de polo e zero — condição de fase e módulo
 
-Função de transferência em malha aberta:
+Revisão do exemplo anterior com cancelamento: a equação de fase deve ser interpretada módulo $360^\circ$. Com $z_2=4/3$ e $K_d=3$, a condição de módulo e a de fase são satisfeitas simultaneamente. O ganho proporcional é $K_p=7$, e não 3, pois
 
-$$G_{ma}(s)=\frac{K_p(s+1)(s+z_2)}s\frac1{(s+1)(s-1)}=\frac{K_p(s+z_2)}{s(s-1)}$$
+$$\frac{K_d(s+1)(s+z_2)}{s}=K_ds+K_d(1+z_2)+\frac{K_dz_2}{s}$$
 
-**Condição de fase:**
-
-$$\angle(s+z_2)=\angle s+\angle(s-1)+180^\circ$$
-
-$$\theta_{z_2}=\tan^{-1}\left(\frac{\sqrt3}{z_2-1}\right)$$
-
-$$\theta_1=180^\circ-\tan^{-1}\left(\frac{\sqrt3}{1}\right)=120^\circ$$
-
-$$\theta_0=180^\circ-\tan^{-1}\left(\frac{\sqrt3}{2}\right)=139{,}1^\circ$$
-
-$$\tan^{-1}\left(\frac{\sqrt3}{z_2-1}\right)=120^\circ+139{,}1^\circ+180^\circ$$
-
-$$\tan^{-1}\left(\frac{\sqrt3}{z_2-1}\right)=79{,}1^\circ$$
-
-$$\frac{\sqrt3}{z_2-1}=5{,}2\Rightarrow z_2=\frac{\sqrt3+5{,}2}{5{,}2}$$
-
-$$\boxed{z_2=1{,}3}$$
-
-**Condição de módulo:**
-
-$$G_{ma}(s)=\frac{K_p(s+1{,}3)}{s(s-1)}$$
-
-$$\left.\left|\frac{K_p(s+1{,}3)}{s(s-1)}\right|\right|_{s=-1+\sqrt3j}=1$$
-
-$$K_p=\left.\frac{|s|\,|s-1|}{|s+1{,}3|}\right|_{s=-1+\sqrt3j}$$
-
-$$K_p=\frac{|-1+\sqrt3j|\,|-2+\sqrt3j|}{|0{,}3+\sqrt3j|}$$
-
-$$\boxed{K_p\approx3}$$
+$$\boxed{K_p=7,\quad K_i=4,\quad K_d=3}$$
 
 ### PID com zeros iguais (continuação)
 
@@ -1485,35 +1421,21 @@ Considerando uma rampa unitária na entrada, projete um controlador PID de modo 
 
 **Solução:**
 
-$$G_c(s)=\frac{K_p(s+z)^2}s$$
-
-$$2\angle(s+z)=2\angle s+\angle(s+4)+\angle(s+8)+180^\circ$$
-
-$$2\tan^{-1}\left(\frac{2\sqrt3}{z-2}\right)=2\left(180^\circ-\tan^{-1}\frac{2\sqrt3}{2}\right)+\tan^{-1}\frac{2\sqrt3}{2}+\tan^{-1}\frac{2\sqrt3}{6}+180^\circ$$
-
-$$2\tan^{-1}\left(\frac{2\sqrt3}{z-2}\right)=150^\circ$$
-
-$$\tan^{-1}\left(\frac{2\sqrt3}{z-2}\right)=75^\circ$$
-
-$$\frac{2\sqrt3}{z-2}=3{,}73$$
-
-$$z=\frac{2\sqrt3+2\times3{,}73}{3{,}73}\Rightarrow\boxed{z=2{,}9}$$
+$$G_c(s)=\frac{K_d(s+z)^2}s,\qquad z=2+\frac{2\sqrt3}{\tan75^\circ}\approx2{,}928203$$
 
 **Condição de módulo:**
 
-$$G_{ma}(s)=\frac{K_p(s+2{,}9)^2}s\frac1{s(s+4)(s+8)}$$
+$$G_{ma}(s)=\frac{K_d(s+z)^2}{s^2(s+4)(s+8)}$$
 
-$$G_{ma}(s)=\frac{K_p(s+2{,}9)^2}{s^2(s+4)(s+8)}$$
+$$K_d=\left.\frac{|s|^2|s+4|\,|s+8|}{|s+z|^2}\right|_{s=-2+2\sqrt3j}\approx34{,}4752$$
 
-Continuação da condição de módulo:
+Expandindo o PID:
 
-$$\left.\left|\frac{K_p(s+2{,}9)^2}{s^2(s+4)(s+8)}\right|\right|_{s=-2+2\sqrt3j}=1$$
+$$G_c(s)=K_ds+2K_dz+\frac{K_dz^2}{s}$$
 
-$$K_p=\left.\frac{|s^2|\,|s+4|\,|s+8|}{|s+2{,}9|^2}\right|_{s=-2+2\sqrt3j}$$
+$$\boxed{K_d\approx34{,}4752,\quad K_p\approx201{,}9008,\quad K_i\approx295{,}6033}$$
 
-$$K_p=\frac{|(-2+2\sqrt3j)^2|\,|2+2\sqrt3j|\,|6+2\sqrt3j|}{|(0{,}9+2\sqrt3j)^2|}$$
-
-$$\boxed{K_p\approx34{,}5}$$
+O polinômio característico completo é $s^4+12s^3+(32+K_d)s^2+2K_dzs+K_dz^2$. Os polos são $-2\pm j3{,}4641$ e $-4\pm j1{,}5733$; todos são estáveis e o par especificado tem a menor taxa de decaimento. A malha é tipo 2, logo o erro final para rampa unitária é nulo.
 
 ### Implementação analógica do PID (continuação)
 
@@ -1564,4 +1486,39 @@ $$\frac{V_{out}(s)}{V_{in}(s)}=\frac1{sR_1C_2}+\frac{C_1}{C_2}+\frac{R_2}{R_1}+s
 
 $$\frac{V_{out}(s)}{V_{in}(s)}=\frac{C_1}{C_2}+\frac{R_2}{R_1}+\frac1{sR_1C_2}+sR_2C_1$$
 
-$$K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad\tau_i=R_1C_1,\qquad\tau_d=R_2C_1$$
+$$K_p=\frac{C_1}{C_2}+\frac{R_2}{R_1},\qquad K_i=\frac1{R_1C_2},\qquad K_d=R_2C_1$$
+
+Na forma com constantes de tempo:
+
+$$\boxed{\tau_i=\frac{K_p}{K_i}=K_pR_1C_2=R_1C_1+R_2C_2}$$
+
+$$\boxed{\tau_d=\frac{K_d}{K_p}=\frac{R_2C_1}{C_1/C_2+R_2/R_1}}$$
+
+
+## Conferência dos projetos por resposta temporal
+
+A tabela distingue a solução geométrica (polos desejados) da verificação de desempenho do modelo completo. Os números são aproximados, calculados com `scipy.signal.step` em malha fechada, com condições iniciais nulas, amostragem temporal de 0,001 s e faixa medida em relação ao valor final. O erro final foi verificado pelo teorema do valor final após conferir a estabilidade. As alternativas numéricas são exemplos de soluções para limites máximos, não os únicos ganhos possíveis nem garantias de robustez para a planta real.
+
+| Projeto | Controlador | $M_p$ | $t_s$ | Erro ao degrau | Parecer |
+| --- | --- | ---: | ---: | ---: | --- |
+| Avanço — original (ganhos refinados) | $4{,}16(s+2)/(s+5{,}6)$ | 27,40% | 2,05 s (2%) | 0 | Não atende |
+| Avanço — alternativa | $26(s+2{,}8)/(s+56)$ | 14,34% | 1,95 s (2%) | 0 | Atende a limites de 16% e 2 s |
+| Atraso | $(s+0{,}19)/(s+0{,}01)$ | 0% | 27,62 s (2%) | 5% | Reduz o erro; cauda lenta |
+| P — primeiro exemplo (original) | $0{,}93$ | 12,40% | 9,63 s (2%) | 0 | Não atende |
+| P — primeiro exemplo (revisado) | $0{,}5$ | 0,66% | 9,23 s (2%) | 0 | Atende |
+| P — segundo exemplo | $20{,}4$ | 9,76% | 1,18 s (2%) | 19,69% | Atende aos limites transitórios |
+| PD — original (ganhos refinados) | $2{,}5+0{,}15s$ | 31,30% | 0,97 s (2%) | 0 | Não atende |
+| PD — alternativa | $1+0{,}28s$ | 5,16% | 0,73 s (2%) | 0 | Atende a limites de 25% e 1 s |
+| PI — original (ganhos refinados) | $0{,}744+1{,}632/s$ | 1,51% | 1,33 s (5%) | 0 | Não atende |
+| PI — alternativa | $1{,}7+2{,}5/s$ | 0,04% | 0,74 s (5%) | 0 | Atende a limites de 0,63% e 1,5 s |
+
+Nos projetos com rampa, verifica-se separadamente o erro final. Não se aplica diretamente o sobressinal percentual de um degrau à saída de uma rampa.
+
+## Referências acadêmicas da revisão
+
+- University of Michigan. [Control Tutorials for MATLAB and Simulink — System Analysis](https://ctms.engin.umich.edu/CTMS/?example=Introduction&section=SystemAnalysis). Métricas temporais, estabilidade e modelos de segunda ordem.
+- University of Michigan. [Motor Position: Root Locus Controller Design](https://ctms.engin.umich.edu/CTMS/?example=MotorPosition&section=ControlRootLocus). Projeto pelo LGR e conferência da resposta temporal.
+- Iqbal, K. [Introduction to Control Systems — Chapter 5: Control System Design with Root Locus](https://eng.libretexts.org/Bookshelves/Industrial_and_Systems_Engineering/Introduction_to_Control_Systems_%28Iqbal%29/05%3A_Control_System_Design_with_Root_Locus). Condições de fase e módulo, avanço, atraso, PD, PI e PID.
+- Iqbal, K. [Controller Realization](https://eng.libretexts.org/Bookshelves/Industrial_and_Systems_Engineering/Introduction_to_Control_Systems_%28Iqbal%29/05%3A_Control_System_Design_with_Root_Locus/5.06%3A_Controller_Realization). Implementações analógicas com amplificadores operacionais.
+
+Leituras complementares recomendadas: Katsuhiko Ogata, *Engenharia de Controle Moderno*; Norman S. Nise, *Engenharia de Sistemas de Controle*. Não foram consultadas páginas específicas desses livros nesta revisão.
