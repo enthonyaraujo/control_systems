@@ -561,7 +561,7 @@ Considere o seguinte diagrama de blocos:
 \draw[->] (k.west) -- node[above] {$Kx(t)$} (5.05,-2.25) -- (s2.south);
 \draw[->] (11.5,0) -- (11.5,-3.45) -- (.9,-3.45) -- (s1.south);
 \foreach \x/\y in {9.8/0,9.8/-1.15,11.5/0} {\fill (\x,\y) circle (1.4pt);}
-\foreach \x/\y/\s in {.5/.23/+, .55/-.42/-,4.65/-.18/+,5.35/-.43/-,7.05/.23/+,7.1/-.43/+} {\node at (\x,\y) {$\s$};}
+\foreach \x/\y/\s in {.5/.23/+, .55/-.42/-,4.65/-.18/-,5.35/-.43/-,7.05/.23/+,7.1/-.43/+} {\node at (\x,\y) {$\s$};}
 \draw (1.8,-.65) -- (1.8,-.82) -- (4,-.82) -- (4,-.65);
 \node[below,font=\scriptsize,align=center] at (2.9,-.85) {ação integral};
 \node[below,font=\scriptsize] at (8.75,-2.7) {proporcional};
@@ -577,14 +577,14 @@ $$y(t)=Cx(t)\tag{II}$$
 
 **Lei de controle:**
 
-$$u(t)=-Kx(t)+K_Iv(t)\tag{III}$$
+$$u(t)=-Kx(t)-K_Iv(t)\tag{III}$$
 
 $$e(t)=r(t)-y(t)\tag{IV}$$
 
 Substituindo (III) em (I):
 
 $$
-\begin{aligned}\dot x(t)&=Ax(t)+B(-Kx(t)+K_Iv)\\\dot x(t)&=Ax(t)-BKx(t)+BK_Iv\end{aligned}
+\begin{aligned}\dot x(t)&=Ax(t)+B(-Kx(t)-K_Iv)\\\dot x(t)&=Ax(t)-BKx(t)-BK_Iv\end{aligned}
 $$
 
 $$\dot v(t)=e(t)=r(t)-y(t)\tag{V}$$
@@ -599,15 +599,15 @@ $$
 \begin{bmatrix}\dot x\\\dot v\end{bmatrix}=
 \underbrace{\begin{bmatrix}A&0\\-C&0\end{bmatrix}}_{\hat A}\begin{bmatrix}x\\v\end{bmatrix}-
 \underbrace{\begin{bmatrix}B\\0\end{bmatrix}}_{\hat B}
-\underbrace{\begin{bmatrix}K&-K_I\end{bmatrix}}_{\hat K}\begin{bmatrix}x\\v\end{bmatrix}+
+\underbrace{\begin{bmatrix}K&K_I\end{bmatrix}}_{\hat K}\begin{bmatrix}x\\v\end{bmatrix}+
 \begin{bmatrix}0\\1\end{bmatrix}r
 $$
 
 O diagrama considera $D=0$ e uma única entrada e saída. Definindo $\hat x=\begin{bmatrix}x^T&v\end{bmatrix}^T$, a matriz de malha fechada é:
 
-$$\hat A-\hat B\hat K=\begin{bmatrix}A-BK&BK_I\\-C&0\end{bmatrix}$$
+$$\hat A-\hat B\hat K=\begin{bmatrix}A-BK&-BK_I\\-C&0\end{bmatrix}$$
 
-**Atenção à convenção de sinais:** como $\dot v=r-y$ e $u=-Kx+K_Iv$, o ganho aumentado é $\hat K=\begin{bmatrix}K&-K_I\end{bmatrix}$. O último elemento de $\hat K$ não é o ganho integral físico $K_I$, mas seu oposto.
+**Convenção de sinais:** adotamos $\dot v=r-y$ e $\hat K=\begin{bmatrix}K&K_I\end{bmatrix}$, de modo que $u=-\hat K\hat x=-Kx-K_Iv$. O símbolo $K_I$ aparece sem sinal negativo no vetor de ganhos, mas seu valor é determinado pelo projeto e pode ser negativo. Se a lei for escrita com $+K_I^{(+)}v$, então $K_I^{(+)}=-K_I$.
 
 **Teorema:** para o sistema aumentado com $D=0$ e $p$ saídas integradas, o par $(\hat A,\hat B)$ é controlável se, e somente se, $(A,B)$ for controlável e
 
@@ -662,48 +662,52 @@ $$\Delta_d=s^3+6s^2+12s+8$$
 
 **2) Polinômio de malha fechada:**
 
-$$\hat K=\begin{bmatrix}K&-K_I\end{bmatrix}=\begin{bmatrix}K_1&K_2&-K_I\end{bmatrix}$$
+$$\hat K=\begin{bmatrix}K&K_I\end{bmatrix}=\begin{bmatrix}K_1&K_2&K_I\end{bmatrix}$$
 
-$$\Delta_{mf}(s)=\det(\hat A-\hat B\hat K - sI))$$
+$$\Delta_{mf}(s)=\det(\hat A-\hat B\hat K-sI)$$
 
 $$
-\hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}-\begin{bmatrix}0\\1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2&-K_I\end{bmatrix}
+\hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}-\begin{bmatrix}0\\1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2&K_I\end{bmatrix}
 $$
 
-$$\hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\2-K_1&-1-K_2&K_I\\0&-1&0\end{bmatrix}$$
+$$\hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\2-K_1&-1-K_2&-K_I\\0&-1&0\end{bmatrix}$$
 
-$$\Delta_{mf}(s)=\begin{vmatrix}s+1&-2&0\\K_1-2&s+1+K_2&-K_I\\0&1&s\end{vmatrix}$$
+$$\Delta_{mf}(s)=\begin{vmatrix}-1-s&2&0\\2-K_1&-1-K_2-s&-K_I\\0&-1&-s\end{vmatrix}$$
 
 Aplicando a regra de Sarrus (ou expandindo pela primeira linha):
 
 $$
 \begin{aligned}
-\Delta_{mf}(s)&=(s+1)[s(s+1+K_2)+K_I]+2s(K_1-2)\\
-&=s^3+(K_2+2)s^2+(K_2+2K_1+K_I-3)s+K_I
+\Delta_{mf}(s)&=-(s+1)[s(s+1+K_2)-K_I]+2s(2-K_1)\\
+&=-s^3-(K_2+2)s^2-(K_2+2K_1-K_I-3)s+K_I
 \end{aligned}
 $$
 
-Comparando com o polinômio desejado:
+Como a matriz aumentada é de ordem 3, $\det(\hat A-\hat B\hat K-sI)=-\det(sI-(\hat A-\hat B\hat K))$. Multiplicamos todo o polinômio por $-1$ para obter o polinômio mônico, sem alterar suas raízes:
 
-$$\boxed{K_I=8}$$
+$$-\Delta_{mf}(s)=s^3+(K_2+2)s^2+(K_2+2K_1-K_I-3)s-K_I$$
+
+Igualando $-\Delta_{mf}(s)=\Delta_d(s)$ e comparando os coeficientes:
+
+$$-K_I=8\Rightarrow\boxed{K_I=-8}$$
 
 $$K_2+2=6\Rightarrow\boxed{K_2=4}$$
 
-$$K_2+2K_1+K_I-3=12\Rightarrow\boxed{K_1=\frac32}$$
+$$K_2+2K_1-K_I-3=12\Rightarrow\boxed{K_1=\frac32}$$
 
 Portanto:
 
-$$\boxed{K=\begin{bmatrix}\frac32&4\end{bmatrix},\qquad K_I=8}$$
+$$\boxed{K=\begin{bmatrix}\frac32&4\end{bmatrix},\qquad K_I=-8}$$
 
 $$\boxed{\hat K=\begin{bmatrix}\frac32&4&-8\end{bmatrix}}$$
 
-A lei de controle é $u(t)=-\frac32x_1(t)-4x_2(t)+8v(t)$.
+A lei de controle é $u(t)=-Kx(t)-K_Iv(t)=-\frac32x_1(t)-4x_2(t)+8v(t)$.
 
 Verificando:
 
 $$\hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\\frac12&-5&8\\0&-1&0\end{bmatrix}$$
 
-$$\det(sI-(\hat A-\hat B\hat K))=s^3+6s^2+12s+8=(s+2)^3$$
+$$\det(\hat A-\hat B\hat K-sI)=-s^3-6s^2-12s-8=-(s+2)^3$$
 
 Assim, os três autovalores são iguais a $-2$ e a malha fechada aumentada é assintoticamente estável.
 
