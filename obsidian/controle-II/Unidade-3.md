@@ -487,7 +487,7 @@ $$\Delta_d=s^2+3s+2\tag{1}$$
 
 **2) Polinômio de malha fechada:**
 
-$$\Delta_{mf}(s)=\det(sI-(A-BK))=\det(A-BK-sI)$$
+$$\Delta_{mf}(s)=\det((A-BK - sI))=\det(A-BK-sI)$$
 
 $$
 \begin{aligned}A-BK-sI&=\begin{bmatrix}-1&2\\-2&-1\end{bmatrix}-\begin{bmatrix}1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2\end{bmatrix}-\begin{bmatrix}s&0\\0&s\end{bmatrix}\\
