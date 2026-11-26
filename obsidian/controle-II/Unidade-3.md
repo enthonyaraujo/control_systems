@@ -664,7 +664,7 @@ $$\Delta_d=s^3+6s^2+12s+8$$
 
 $$\hat K=\begin{bmatrix}K&-K_I\end{bmatrix}=\begin{bmatrix}K_1&K_2&-K_I\end{bmatrix}$$
 
-$$\Delta_{mf}(s)=\det(sI-(\hat A-\hat B\hat K))$$
+$$\Delta_{mf}(s)=\det(\hat A-\hat B\hat K - sI))$$
 
 $$
 \hat A-\hat B\hat K=\begin{bmatrix}-1&2&0\\2&-1&0\\0&-1&0\end{bmatrix}-\begin{bmatrix}0\\1\\0\end{bmatrix}\begin{bmatrix}K_1&K_2&-K_I\end{bmatrix}
