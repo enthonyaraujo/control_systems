@@ -456,7 +456,7 @@ $$
 **2) Polinômio de malha fechada:**
 
 $$
-\Delta_{mf}(s)=\det(sI-(A-BK))=\det(A-BK-sI)
+\Delta_{mf}(s)=\det((A-BK - sI))=\det(A-BK-sI)
 $$
 
 $$
@@ -658,7 +658,7 @@ $$
 $$
 
 $$
-\Delta_{mf}(s)=\det(sI-(\hat A-\hat B\hat K))
+\Delta_{mf}(s)=\det(\hat A-\hat B\hat K - sI))
 $$
 
 $$
